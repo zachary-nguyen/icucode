@@ -1,5 +1,5 @@
 {
-  "name": "battlefy-opgglite",
+  "name": "icucode",
   "version": "1.0.0",
   "private": true,
   "proxy": "http://localhost:8080",
@@ -29,11 +29,11 @@
     "typescript": "^3.7.5"
   },
   "scripts": {
-    "start": "node_modules/.bin/react-scripts start",
-    "build": "node_modules/.bin/react-scripts build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "serve": "cd ../backend/server && node build/server.js",
-    "test": "node_modules/.bin/react-scripts test",
-    "eject": "node_modules/.bin/react-scripts eject"
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
