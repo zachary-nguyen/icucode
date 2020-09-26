@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "module": "commonjs",
+    "noImplicitAny": false,
+    "target": "es6",
+    "outDir": "../build",
+    "sourceMap": true,
+    "baseUrl": "./",
+    "moduleResolution": "node",
+    "removeComments": true,
+    "typeRoots": ["node_modules/@types"]
+  }
+}

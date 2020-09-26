@@ -1,0 +1,45 @@
+{
+  "name": "icucode",
+  "version": "1.0.0",
+  "private": true,
+  "main": "../build/server.js",
+  "engines": {
+    "node": "8.* || >= 10.*",
+    "yarn": ">=1.*"
+  },
+  "dependencies": {
+    "@types/body-parser": "^1.16.4",
+    "@types/cors": "^2.8.6",
+    "@types/dotenv": "^4.0.0",
+    "@types/express": "^4.0.36",
+    "@types/jest": "^24.0.15",
+    "@types/lodash": "^4.14.116",
+    "@types/node": "^13.1.8",
+    "acorn-dynamic-import": "^4.0.0",
+    "axios": "^0.19.0",
+    "body-parser": "^1.19.0",
+    "chai": "^4.2.0",
+    "chalk": "^2.4.1",
+    "cors": "^2.8.5",
+    "dotenv": "^4.0.0",
+    "express": "^4.16.2",
+    "jest": "^24.8.0",
+    "json-loader": "^0.5.7",
+    "lodash": "^4.17.13",
+    "node": "^13.7.0",
+    "nodemon-webpack-plugin": "^4.2.2",
+    "path": "^0.12.7",
+    "serve-static": "^1.14.1",
+    "ts-jest": "^21.2.4",
+    "ts-loader": "^3.2.0",
+    "ts-node": "^3.3.0",
+    "tslint": "^5.11.0",
+    "typescript": "^3.1.6",
+    "webpack": "^3.9.1"
+  },
+  "scripts": {
+    "start:prod": "ts-node server/server.ts",
+    "start:dev":"webpack --watch --mode development",
+    "build": "webpack --config webpack.config.js"
+  }
+}

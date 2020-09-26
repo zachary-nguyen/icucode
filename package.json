@@ -1,0 +1,50 @@
+{
+  "name": "icucode",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.9.1",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "@types/jest": "^24.9.1",
+    "@types/node": "^12.12.26",
+    "acorn-dynamic-import": "^4.0.0",
+    "concurrently": "^5.3.0",
+    "nodemon-webpack-plugin": "^4.2.2",
+    "ts-loader": "^6.2.1",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.7.5"
+  },
+  "scripts": {
+    "install:all": "yarn install && yarn install:frontend && yarn install:backend",
+    "install:frontend": "cd frontend && yarn install",
+    "install:backend": "cd backend && yarn install",
+    "start:prod": "cd backend && yarn start:prod",
+    "start:dev": "concurrently \"yarn start:backend\" \"yarn start:frontend\" ",
+    "start:backend": "cd backend && yarn start:dev",
+    "start:frontend": "cd frontend && yarn start",
+    "build": "yarn build:frontend && yarn build:backend",
+    "build:backend": "cd backend && yarn build",
+    "build:frontend": "cd frontend && yarn build",
+    "serve": "cd backend/server && node build/server.js"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.3.10"
+  }
+}
