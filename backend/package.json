@@ -39,7 +39,7 @@
   },
   "scripts": {
     "start:prod": "ts-node server/server.ts",
-    "start:dev":"webpack --watch --mode development",
+    "start:dev":"webpack --watch",
     "build": "webpack --config webpack.config.js"
   }
 }
