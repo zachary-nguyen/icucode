@@ -2,6 +2,11 @@
   "name": "icucode",
   "version": "1.0.0",
   "private": true,
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">= 10.* <=12.*",
+    "yarn": ">=1"
+  },
   "dependencies": {
     "@material-ui/core": "^4.9.1",
     "@testing-library/jest-dom": "^4.2.4",
@@ -20,6 +25,7 @@
     "install:all": "yarn install && yarn install:frontend && yarn install:backend",
     "install:frontend": "cd frontend && yarn install",
     "install:backend": "cd backend && yarn install",
+    "start": "yarn start:prod",
     "start:prod": "cd backend && yarn start:prod",
     "start:dev": "concurrently \"yarn start:backend\" \"yarn start:frontend\" ",
     "start:backend": "cd backend && yarn start:dev",
