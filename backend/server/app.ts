@@ -45,7 +45,7 @@ export default class App {
         this.app.use(bodyParser.json({ limit: "50mb" }));
         this.app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
         this.app.use(cors(this.options));
-        this.app.use(express.static(path.resolve( __dirname, "..","..","frontend", "build")));
+        this.app.use(express.static(path.resolve( __dirname, "..","..", "build")));
     }
 
     private initControllers(controllers: any[]) {
@@ -58,7 +58,7 @@ export default class App {
         this.app.get("/", (req, res) => res.json({ version: 1 }));
         // Intercept requests to return the frontend's static entry point
         this.app.get("*", (_, response) => {
-            response.sendFile(path.resolve("..","..","frontend","build", "index.html"));
+            response.sendFile(path.resolve("..","..","build", "index.html"));
         });
     }
 
