@@ -4,9 +4,9 @@ const NodemonPlugin = require("nodemon-webpack-plugin");
 const webpack = require("webpack");
 
 module.exports = {
-    entry: "./server/server.ts",
+    entry: "./server.ts",
     output: {
-        path: path.join(__dirname, "/build"),
+        path: path.join(__dirname, "../build"),
         filename: "server.js"
     },
     resolve: {

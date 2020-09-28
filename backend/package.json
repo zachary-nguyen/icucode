@@ -48,7 +48,7 @@
     "webpack": "^3.9.1"
   },
   "scripts": {
-    "start:prod": "set NODE_ENV=production && ts-node server/server.ts",
+    "start:prod": "set NODE_ENV=production && ts-node server.ts",
     "start:dev": "set NODE_ENV=development && webpack --watch",
     "build": "webpack --config webpack.config.js"
   }

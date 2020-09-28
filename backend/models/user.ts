@@ -1,7 +1,7 @@
 import { pbkdf2Sync, randomBytes } from "crypto";
 import { sign } from "jsonwebtoken";
 import { Document, model, Schema } from "mongoose";
-import { SchemaDef } from "../../AppSchemaTypes";
+import { SchemaDef } from "../AppSchemaTypes";
 import { App } from "app-shared-codesets";
 
 
