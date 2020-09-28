@@ -1,10 +1,12 @@
+const fs = require("fs");
 const path = require("path");
 const NodemonPlugin = require("nodemon-webpack-plugin");
+const webpack = require("webpack");
 
 module.exports = {
     entry: "./server/server.ts",
     output: {
-        path: path.join(__dirname, "../build"),
+        path: path.join(__dirname, "/build"),
         filename: "server.js"
     },
     resolve: {
@@ -19,5 +21,6 @@ module.exports = {
         ]
     },
     target: "node",
-    plugins: [new NodemonPlugin()]
+    externals: [{ mongoose: 'commonjs mongoose', express: 'commonjs express' }],
+    plugins: [new NodemonPlugin(), new webpack.ContextReplacementPlugin(/require_optional/,/mongoose/,/express/)]
 };

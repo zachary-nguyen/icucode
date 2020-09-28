@@ -5,7 +5,8 @@ import Routes from "./routes/Routes";
 function App() {
   return (
     <div className="App">
-      <Routes/>
+      {/*<Routes/>*/}
+      <h1> ICUCODE </h1>
     </div>
   );
 }

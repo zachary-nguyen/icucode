@@ -3,6 +3,7 @@ import * as express from "express";
 import * as path from "path";
 import * as cors from "cors";
 import * as bodyParser from "body-parser";
+import * as mongoose from "mongoose";
 
 export default class App {
     public app: express.Application;
@@ -30,6 +31,7 @@ export default class App {
 
         this.app = express();
         this.port = port;
+        this.connectToMongoDB();
         this.initMiddleware();
         this.initControllers(controllers);
         this.initRoutes();
@@ -45,7 +47,7 @@ export default class App {
         this.app.use(bodyParser.json({ limit: "50mb" }));
         this.app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
         this.app.use(cors(this.options));
-        this.app.use(express.static(path.resolve( __dirname, "..","..", "build")));
+        this.app.use(express.static(path.resolve( __dirname,"/build")));
     }
 
     private initControllers(controllers: any[]) {
@@ -57,9 +59,30 @@ export default class App {
     private initRoutes() {
         this.app.get("/", (req, res) => res.json({ version: 1 }));
         // Intercept requests to return the frontend's static entry point
+        console.log(path.resolve( __dirname,"../../frontend/build/index.html"))
         this.app.get("*", (_, response) => {
-            response.sendFile(path.resolve("..","..","build", "index.html"));
+            response.sendFile(path.resolve( __dirname,"../../frontend/build/index.html"));
         });
+    }
+
+    /**
+     * Connect to the databases based on environment
+     */
+    private async connectToMongoDB() {
+        const url = process.env.NODE_ENV !== "development" ? process.env.MONGODB_URI_PROD : process.env.MONGODB_URI_DEV;
+        await mongoose
+            .connect(url, {
+                useNewUrlParser: true,
+                useCreateIndex: true,
+                useUnifiedTopology: true,
+                useFindAndModify: false,
+            })
+            .then(() => {
+                console.log("Database Connected:", process.env.NODE_ENV);
+            })
+            .catch((err) => {
+                console.log("Unable to connect to db ", err);
+            });
     }
 
 }
