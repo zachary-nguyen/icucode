@@ -3,10 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "license": "UNLICENSED",
-  "engines": {
-    "node": ">= 10.* <=12.*",
-    "yarn": ">=1"
-  },
   "proxy": "http://localhost:8080",
   "dependencies": {
     "@material-ui/core": "^4.9.1",
@@ -26,26 +22,18 @@
     "express": "^4.17.1",
     "nodemon-webpack-plugin": "^4.2.2",
     "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.4.1",
     "ts-loader": "^6.2.1",
     "ts-node": "^8.6.2",
     "typescript": "^3.7.5"
   },
   "scripts": {
-    "install:all": "yarn install && yarn install:frontend && yarn install:backend",
-    "install:frontend": "cd frontend && yarn install",
-    "install:backend": "cd backend && yarn install",
-    "start": "yarn start:prod",
-    "start:prod": "cd backend && yarn start:prod",
-    "start:dev": "concurrently \"yarn start:backend\" \"yarn start:frontend\" ",
-    "start:backend": "cd backend && yarn start:dev",
-    "start:frontend": "cd frontend && yarn start",
-    "build": "yarn build:frontend && yarn build:backend",
-    "build:backend": "cd backend && yarn build",
-    "build:frontend": "cd frontend && yarn build",
-    "serve": "cd backend/server && node build/server.js",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "heroku-prebuild": "yarn install:all"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
