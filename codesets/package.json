@@ -1,0 +1,15 @@
+{
+  "name": "app-shared-codesets",
+  "version": "1.0.1",
+  "license": "UNLICENSED",
+  "description": "Shared codesets between backend and frontend",
+  "typeScriptVersion": "3",
+  "scripts": {
+    "build": "tsc index.d.ts"
+  },
+  "dependencies": {
+    "@types/mongoose": "5.7.13",
+    "typescript": "^3.7.5"
+  },
+  "devDependencies": {}
+}
