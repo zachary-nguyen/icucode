@@ -49,7 +49,7 @@
   },
   "scripts": {
     "start:prod": "set NODE_ENV=production && ts-node server.ts",
-    "start:dev": "set NODE_ENV=development && webpack --watch",
+    "start:dev": "webpack --watch",
     "build": "webpack --config webpack.config.js"
   }
 }

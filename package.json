@@ -43,7 +43,7 @@
     "install:backend": "cd backend && yarn install",
     "start": "set NODE_ENV=production && yarn start:prod",
     "start:prod": "cd backend && yarn start:prod",
-    "start:dev": "set NODE_ENV=development && concurrently \"yarn start:backend\" \"yarn start:frontend\" ",
+    "start:dev": "concurrently \"yarn start:backend\" \"yarn start:frontend\" ",
     "start:backend": "cd backend && yarn start:dev",
     "start:frontend": "react-scripts start",
     "build": "yarn build:codesets && yarn build:frontend && yarn build:backend",

@@ -35,6 +35,12 @@ export default class AuthenticationController implements Controller {
 
     private registerUser = async (request: Request, response: Response) => {
         try {
+            const user = new User();
+            user.email = "tesst@emasil.com";
+            user.setPassword("1234s56");
+
+            await user.save();
+
             return response.status(200).json("success")
         } catch (error) {
             return response.status(400).json(error);
