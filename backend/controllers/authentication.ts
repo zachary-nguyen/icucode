@@ -6,8 +6,6 @@ import { NextFunction, Request, Response } from "express";
 import User from "../models/user";
 import Controller from "../interfaces/controller.interface";
 
-
-
 export default class AuthenticationController implements Controller {
     public path = "/api/auth";
 
@@ -36,11 +34,12 @@ export default class AuthenticationController implements Controller {
     private registerUser = async (request: Request, response: Response) => {
         try {
             const user = new User();
-            user.email = "tesst@emasil.com";
-            user.setPassword("1234s56");
+            user.firstName = request.body.firstName;
+            user.lastName= request.body.lastName;
+            user.email = request.body.email;
+            user.setPassword(request.body.password);
 
             await user.save();
-
             return response.status(200).json("success")
         } catch (error) {
             return response.status(400).json(error);
@@ -59,11 +58,16 @@ export default class AuthenticationController implements Controller {
                 if (!user) {
                     return response.status(400).json({ error: error.message });
                 }
-                if (!user.isVerified)
-                    return response.status(401).json({ error: "Account not verified" });
+
+                // ensure
+                // if (!user.isVerified) return response.status(401).json({ error: "Account not verified" });
                 // If login is valid generate a token and return it to the user
                 const tokenSignature = user.generateJwt();
-                return response.status(200).json(tokenSignature);
+                return response.status(200).json({
+                  userId: user.id,
+                  email: user.email,
+                  token: tokenSignature.token,
+                  expiry: tokenSignature.expiry });
             })(request, response, next);
         } catch (error) {
             return response.status(400).json(error);

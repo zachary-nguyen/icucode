@@ -93,6 +93,7 @@ interface Props {
 const ProfileDrawer = (props: Props) => {
     const classes = useStyles();
     const theme = useTheme();
+    const [email] = React.useState(localStorage.getItem('email'));
 
     return (
         <div className={classes.root}>
@@ -114,7 +115,7 @@ const ProfileDrawer = (props: Props) => {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" noWrap>
-                        iCUCODE
+                        {"iCUCODE Logged in as " + email }
                     </Typography>
                 </Toolbar>
             </AppBar>

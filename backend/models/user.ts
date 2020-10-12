@@ -4,7 +4,6 @@ import { Document, model, Schema } from "mongoose";
 import { SchemaDef } from "../AppSchemaTypes";
 import { App } from "app-shared-codesets";
 
-
 interface UserDoc extends App.User, Document{
     setPassword(password: string): void;
     isPasswordValid(password: string): boolean;
@@ -14,6 +13,15 @@ interface UserDoc extends App.User, Document{
 }
 
 const userSchemaDef: SchemaDef<App.User> = {
+    firstName: {
+        type: String,
+        required: true,
+    },
+    lastName: {
+        type: String,
+        unique: true,
+        required: true,
+    },
     email: {
         type: String,
         unique: true,
@@ -31,11 +39,19 @@ const userSchemaDef: SchemaDef<App.User> = {
 
 class UserClass {
     private id: string;
+    private firstName: string;
+    private lastName: string;
     private email: string;
     private salt: string;
     private hash: string;
     private resetPasswordToken: string;
     private resetPasswordExpires: Date;
+
+    public setPropeties(firstName: string, lastName: string, email: string){
+      this.firstName = firstName;
+      this.lastName = lastName;
+      this.email = email;
+    }
 
     public setPassword(password: string) {
         this.salt = randomBytes(16).toString("hex");

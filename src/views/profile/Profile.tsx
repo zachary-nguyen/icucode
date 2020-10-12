@@ -115,15 +115,15 @@ const Profile = (props: Props) => {
                             SYSC 4906
                         </Typography>
                     </Grid>
-                    <Grid className={classes.assigmentContainer} container direction={"column"} justify={'flex-start'}>
+                    <Grid className={classes.assigmentContainer} container alignContent="center" direction={"column"} justify={'flex-start'}>
                         <Grid container>
                             <Typography gutterBottom variant={"h5"}>
                                 Labs
                             </Typography>
                         </Grid>
-                        <Grid container direction={"row"} >
+                        <Grid container alignContent="center" alignItems="center" justify="center" direction={"row"} >
                             {['Assignment 1', 'Assignment 2', 'Assignment 3', "Assignment 4", "Assignment 5", "Assignment 6", "Assignment 7"].map((text, index) => (
-                                <Grid item xs alignContent={"center"} alignItems={"center"} justify={"center"}>
+                                <Grid item key={index} xs >
                                     <Card key={index} className={classes.courseCard}>
                                         <CardActionArea className={classes.cardActionArea}>
                                             {text}
@@ -139,9 +139,9 @@ const Profile = (props: Props) => {
                                 Assignments
                             </Typography>
                         </Grid>
-                        <Grid container direction={"row"}>
+                        <Grid container alignContent="center" alignItems="center" justify="center" direction={"row"}>
                             {['Lab 1', 'Lab 2', 'Lab 3', "Lab 4", "Lab 5"].map((text, index) => (
-                                <Grid item xs alignContent={"center"} alignItems={"center"} justify={"center"}>
+                                <Grid item key={index} xs>
                                     <Card key={index} className={classes.courseCard}>
                                         <CardActionArea className={classes.cardActionArea}>
                                             {text}
