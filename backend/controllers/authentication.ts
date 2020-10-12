@@ -6,8 +6,6 @@ import { NextFunction, Request, Response } from "express";
 import User from "../models/user";
 import Controller from "../interfaces/controller.interface";
 
-
-
 export default class AuthenticationController implements Controller {
     public path = "/api/auth";
 
@@ -36,8 +34,10 @@ export default class AuthenticationController implements Controller {
     private registerUser = async (request: Request, response: Response) => {
         try {
             const user = new User();
-            user.email = "tesst@emasil.com";
-            user.setPassword("1234s56");
+            user.firstName = request.body.firstName;
+            user.lastName= request.body.lastName;
+            user.email = request.body.email;
+            user.setPassword(request.body.password);
 
             await user.save();
 
