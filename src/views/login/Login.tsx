@@ -1,11 +1,9 @@
 import {
   Avatar,
   Button,
-  Checkbox,
   Container,
   createStyles,
   CssBaseline,
-  FormControlLabel,
   Grid,
   Link,
   makeStyles,
@@ -14,6 +12,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import React, { useState } from "react";
+const axios = require('axios');
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,6 +43,28 @@ const Login = (props: Props) => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const loginUser= () => {
+    axios.post('/api/auth/login', {
+      email: email,
+      password: password,
+    })
+    .then(function (response: any) {
+      if (response.status === 200) {
+        console.log(response.data);
+        localStorage.setItem('userId', response.data.userId);
+        localStorage.setItem('email', response.data.email);
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('expiry', response.data.expiry);
+        window.location.replace("/profile");
+      }else{
+        console.log("Something went really wrong");
+      }
+    })
+    .catch(function (error: any) {
+      console.log(error);
+    });
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -80,16 +101,12 @@ const Login = (props: Props) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
           <Button
-            type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={(e) => loginUser()}
           >
             Sign In
           </Button>
