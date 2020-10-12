@@ -1,12 +1,9 @@
 import {
   Avatar,
-  Box,
   Button,
-  Checkbox,
   Container,
   createStyles,
   CssBaseline,
-  FormControlLabel,
   Grid,
   Link,
   makeStyles,
@@ -14,7 +11,6 @@ import {
   Theme,
   Typography,
 } from "@material-ui/core";
-import { Copyright } from "@material-ui/icons";
 import React, { useState } from "react";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -30,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.secondary.main,
     },
     form: {
-      width: "100%", // Fix IE 11 issue.
+      width: "100%", 
       marginTop: theme.spacing(1),
     },
     submit: {
