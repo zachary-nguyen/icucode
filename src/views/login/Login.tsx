@@ -44,10 +44,8 @@ interface Props {}
 const Login = (props: Props) => {
   const classes = useStyles();
 
-  const [loginState, setLoginState] = useState({
-    email: "",
-    password: "",
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   return (
     <Container component="main" maxWidth="xs">
@@ -68,6 +66,8 @@ const Login = (props: Props) => {
             name="email"
             autoComplete="email"
             autoFocus
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -79,6 +79,8 @@ const Login = (props: Props) => {
             type="password"
             id="password"
             autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -100,7 +102,7 @@ const Login = (props: Props) => {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/register" variant="body2">
                 Don't have an account? Sign Up
               </Link>
             </Grid>
