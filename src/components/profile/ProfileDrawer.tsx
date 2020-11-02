@@ -17,6 +17,11 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import SchoolIcon from '@material-ui/icons/School';
 import ClassIcon from '@material-ui/icons/Class';
+import {App} from "../../../codesets";
+import AddIcon from '@material-ui/icons/Add';
+import {Link} from "react-router-dom";
+import {clearSession} from "../../session";
+import {Button} from "@material-ui/core";
 
 const drawerWidth = 240;
 
@@ -81,6 +86,10 @@ const useStyles = makeStyles((theme: Theme) =>
             }),
             marginLeft: 0,
         },
+        title: {
+            flexGrow: 1,
+            textAlign: "left"
+        }
     }),
 );
 
@@ -88,12 +97,12 @@ interface Props {
     open: boolean;
     handleOpen: any;
     handleClose: any;
+    user?: App.UserDoc;
 }
 
 const ProfileDrawer = (props: Props) => {
     const classes = useStyles();
     const theme = useTheme();
-    const [email] = React.useState(localStorage.getItem('email'));
 
     return (
         <div className={classes.root}>
@@ -114,9 +123,18 @@ const ProfileDrawer = (props: Props) => {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap>
-                        {"iCUCODE Logged in as " + email }
+                    <Typography className={classes.title} variant="h6" noWrap>
+                        {props.user && "Logged in as " + props.user.firstName + " " + props.user.lastName}
                     </Typography>
+                    <Button
+                        color="inherit"
+                        onClick={() => {
+                            clearSession();
+                            window.location.replace("/");
+                        }}
+                    >
+                        Logout
+                    </Button>
                 </Toolbar>
             </AppBar>
             <Drawer
@@ -135,21 +153,31 @@ const ProfileDrawer = (props: Props) => {
                 </div>
                 <Divider />
                 <List>
-                    {['My courses'].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon><SchoolIcon color={"primary"}/> </ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItem>
-                    ))}
+                    <ListItem component={Link} to={"/profile"}button>
+                        <ListItemIcon><SchoolIcon color={"primary"}/> </ListItemIcon>
+                        <ListItemText primary={"My courses"} />
+                    </ListItem>
                 </List>
                 <Divider />
                 <List>
-                    {['SYSC 4120', 'SYSC 4906', 'SYSC 4810', "SYSC 2100"].map((text, index) => (
-                        <ListItem button key={text}>
+                    {props.user && props.user.courses && props.user.courses.length > 0 && props.user.courses.map((course, index) => (
+                        <ListItem button key={index}>
                             <ListItemIcon><ClassIcon color={"primary"}/></ListItemIcon>
-                            <ListItemText primary={text} />
+                            <ListItemText primary={course.courseCode} />
                         </ListItem>
                     ))}
+                    {props.user && props.user.facultyUser &&
+                        <ListItem color={"primary"} component={Link} to={"/create-course"} button key={"create-course"}>
+                            <ListItemIcon><AddIcon color={"primary"}/></ListItemIcon>
+                            <ListItemText primary={"Create new course"} />
+                        </ListItem>
+                    }
+                    {props.user && props.user.facultyUser &&
+                        <ListItem color={"primary"} component={Link} to={"/courselist"} button key={"register"}>
+                            <ListItemIcon><AddIcon color={"primary"}/></ListItemIcon>
+                            <ListItemText primary={"Register to Course"} />
+                        </ListItem>
+                    }
                 </List>
             </Drawer>
         </div>

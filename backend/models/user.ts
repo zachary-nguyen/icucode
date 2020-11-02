@@ -3,6 +3,7 @@ import { sign } from "jsonwebtoken";
 import { Document, model, Schema } from "mongoose";
 import { SchemaDef } from "../AppSchemaTypes";
 import { App } from "app-shared-codesets";
+const ObjectId = Schema.Types.ObjectId;
 
 interface UserDoc extends App.User, Document{
     setPassword(password: string): void;
@@ -35,6 +36,16 @@ const userSchemaDef: SchemaDef<App.User> = {
         type: String,
         required: true,
     },
+    facultyUser: {
+        type: Boolean,
+        required: true,
+    },
+    courses: {
+        type: [ObjectId],
+        ref: "User",
+        required: true,
+        default: []
+    }
 };
 
 class UserClass {
