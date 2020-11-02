@@ -6,12 +6,12 @@ import {Grid, Typography} from "@material-ui/core";
 import {getAuthHeaders} from "../../session";
 import {AxiosResponse} from "axios";
 import axios from "axios";
-import {App} from "../../../codesets";
-import ListItem from "@material-ui/core/ListItem";
-import {Link} from "react-router-dom";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ClassIcon from "@material-ui/icons/Class";
 import ListItemText from "@material-ui/core/ListItemText";
+import ListItem from "@material-ui/core/ListItem";
+import {Link} from "react-router-dom";
+import {App} from "../../../codesets";
 
 const drawerWidth = 240;
 
@@ -72,9 +72,9 @@ const useStyles = makeStyles((theme: Theme) =>
             }),
             marginLeft: drawerWidth,
         },
-        assigmentContainer: {
+        container: {
             marginTop: "3%"
-        }
+        },
     }),
 );
 
@@ -82,12 +82,13 @@ interface Props {
 
 }
 
-const Profile = (props: Props) => {
+const CourseList = (props: Props) => {
 
     const classes = useStyles();
 
     const [open, setOpen] = React.useState<boolean>(true);
     const [user, setUser] = useState<any>(null);
+    const [courseList, setCourseList] = useState<any>(null);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -97,7 +98,7 @@ const Profile = (props: Props) => {
         setOpen(false);
     };
 
-    // Fetch user model on page load
+    // Fetch user model and courselist
     useEffect(() =>{
         axios.get("/api/users/get", {
             headers: getAuthHeaders()
@@ -106,7 +107,17 @@ const Profile = (props: Props) => {
         }).catch((err) => {
             console.log(err)
         })
+
+        // fetch courses
+        axios.get("/api/courses/courselist", {
+            headers: getAuthHeaders()
+        }).then((res: AxiosResponse) => {
+            setCourseList(res.data);
+        }).catch(err => {
+            console.log(err)
+        })
     },[])
+
 
     return (
         <div>
@@ -119,13 +130,16 @@ const Profile = (props: Props) => {
                 <Grid container direction={"column"}>
                     <Grid container item xs={4}>
                         <Typography variant={"h3"}>
-                            My Courses
+                            Register to a Course
+                        </Typography>
+                        <Typography variant={"body2"}>
+                            Select one of the course below to register
                         </Typography>
                     </Grid>
                     <Grid container direction={"column"} item>
-                        {user && user.courses.length > 0 && user.courses.map((course: App.Course,index: number) => {
+                        {courseList !== null && courseList.length > 0 && courseList.map((course: App.Course,index: number) => {
                             return (
-                                <ListItem component={Link} to={`/course/view/${course.courseCode}`} button key={index}>
+                                <ListItem component={Link} to={`/course/register/${course.courseCode}`} button key={index}>
                                     <ListItemIcon><ClassIcon color={"primary"}/></ListItemIcon>
                                     <ListItemText primary={course.courseCode + " - " + course.courseName} secondary={course.description}/>
                                 </ListItem>
@@ -138,4 +152,4 @@ const Profile = (props: Props) => {
     )
 };
 
-export default Profile;
+export default CourseList;

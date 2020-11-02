@@ -2,16 +2,11 @@ import React, {useEffect, useState} from "react";
 import ProfileDrawer from "../../components/profile/ProfileDrawer";
 import clsx from "clsx";
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
-import {Grid, Typography} from "@material-ui/core";
+import {Button, Grid, TextField, Typography} from "@material-ui/core";
 import {getAuthHeaders} from "../../session";
 import {AxiosResponse} from "axios";
 import axios from "axios";
-import {App} from "../../../codesets";
-import ListItem from "@material-ui/core/ListItem";
-import {Link} from "react-router-dom";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ClassIcon from "@material-ui/icons/Class";
-import ListItemText from "@material-ui/core/ListItemText";
+
 
 const drawerWidth = 240;
 
@@ -72,22 +67,23 @@ const useStyles = makeStyles((theme: Theme) =>
             }),
             marginLeft: drawerWidth,
         },
-        assigmentContainer: {
+        container: {
             marginTop: "3%"
-        }
+        },
     }),
 );
 
 interface Props {
-
+   match: any;
 }
 
-const Profile = (props: Props) => {
+const CourseRegistration = (props: Props) => {
 
     const classes = useStyles();
 
     const [open, setOpen] = React.useState<boolean>(true);
     const [user, setUser] = useState<any>(null);
+    const [course, setCourse] = useState<any>({});
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -97,7 +93,7 @@ const Profile = (props: Props) => {
         setOpen(false);
     };
 
-    // Fetch user model on page load
+    // Fetch user model and courselist
     useEffect(() =>{
         axios.get("/api/users/get", {
             headers: getAuthHeaders()
@@ -106,7 +102,31 @@ const Profile = (props: Props) => {
         }).catch((err) => {
             console.log(err)
         })
+
+        // fetch courses
+        axios.get("/api/courses/get", {
+            params: {
+                courseCode: props.match.params.courseCode
+            },
+            headers: getAuthHeaders()
+        }).then((res: AxiosResponse) => {
+            setCourse(res.data);
+        }).catch(err => {
+            console.log(err)
+        })
     },[])
+
+    const registerToCourse = () => {
+        axios.post("/api/courses/register", {
+            courseCode: course.courseCode
+        }, {headers: getAuthHeaders()})
+            .then((res) => {
+                if(res.status === 200){
+                    window.location.replace(`/course/view/${course.courseCode}`);
+                }
+            })
+            .catch(err => console.log(err))
+    }
 
     return (
         <div>
@@ -117,20 +137,20 @@ const Profile = (props: Props) => {
                 })}
             >
                 <Grid container direction={"column"}>
-                    <Grid container item xs={4}>
+                    <Grid justify={"center"} container direction={"column"} item xs={12}>
                         <Typography variant={"h3"}>
-                            My Courses
+                            {course && course.courseCode}
+                        </Typography>
+                        <Typography variant={"body2"}>
+                            <strong> Description </strong>
+                            {course && course.courseName}
+                        </Typography>
+                        <Typography variant={"body2"}>
+                            <strong>Professor:</strong> {course && course.professor && course.professor.firstName + " " + course.professor.lastName}
                         </Typography>
                     </Grid>
-                    <Grid container direction={"column"} item>
-                        {user && user.courses.length > 0 && user.courses.map((course: App.Course,index: number) => {
-                            return (
-                                <ListItem component={Link} to={`/course/view/${course.courseCode}`} button key={index}>
-                                    <ListItemIcon><ClassIcon color={"primary"}/></ListItemIcon>
-                                    <ListItemText primary={course.courseCode + " - " + course.courseName} secondary={course.description}/>
-                                </ListItem>
-                            )
-                        })}
+                    <Grid justify={"center"} alignItems={"center"} item xs={12}>
+                        <Button onClick={registerToCourse} color={"primary"} variant={"contained"}> Register to this course </Button>
                     </Grid>
                 </Grid>
             </main>
@@ -138,4 +158,4 @@ const Profile = (props: Props) => {
     )
 };
 
-export default Profile;
+export default CourseRegistration;
