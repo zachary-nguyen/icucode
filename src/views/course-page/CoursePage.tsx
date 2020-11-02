@@ -113,7 +113,7 @@ const CoursePage = (props: Props) => {
         }).catch(err => {
             console.log(err)
         })
-    },[])
+    },[props.match.params.courseCode])
 
     return (
         <div>

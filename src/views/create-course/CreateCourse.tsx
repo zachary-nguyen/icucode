@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import ProfileDrawer from "../../components/profile/ProfileDrawer";
 import clsx from "clsx";
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
-import {Button, Card, CardActionArea, Grid, TextField, Typography} from "@material-ui/core";
+import {Button, Grid, TextField, Typography} from "@material-ui/core";
 import {getAuthHeaders} from "../../session";
 import {AxiosResponse} from "axios";
 import axios from "axios";
