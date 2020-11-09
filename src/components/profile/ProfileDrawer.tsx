@@ -161,7 +161,7 @@ const ProfileDrawer = (props: Props) => {
                 <Divider />
                 <List>
                     {props.user && props.user.courses && props.user.courses.length > 0 && props.user.courses.map((course, index) => (
-                        <ListItem button key={index}>
+                        <ListItem component={Link} to={"/course/view/" + course.courseCode} button key={index}>
                             <ListItemIcon><ClassIcon color={"primary"}/></ListItemIcon>
                             <ListItemText primary={course.courseCode} />
                         </ListItem>

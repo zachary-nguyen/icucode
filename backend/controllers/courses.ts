@@ -19,7 +19,6 @@ export default class CourseController implements Controller {
         this.router.get(`${this.path}/courselist`,authorize, this.getCourseList);
         this.router.post(`${this.path}/create`,authorize, this.createCourse);
         this.router.post(`${this.path}/register`,authorize, this.registerToCourse);
-
     }
 
     private getCourse = async (request: Request, response: Response) => {

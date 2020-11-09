@@ -19,7 +19,7 @@ const assignmentSchemaDef: SchemaDef<App.Assignment> = {
         required: false
     },
     courseId: {
-        type: [ObjectId],
+        type: ObjectId,
         ref: "Course",
         required: true
     }

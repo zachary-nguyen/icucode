@@ -2,14 +2,10 @@ import React, {useEffect, useState} from "react";
 import ProfileDrawer from "../../components/profile/ProfileDrawer";
 import clsx from "clsx";
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
-import {Grid, Typography} from "@material-ui/core";
+import {Button, Grid, TextField, Typography} from "@material-ui/core";
 import {getAuthHeaders} from "../../session";
 import {AxiosResponse} from "axios";
 import axios from "axios";
-import {Button, ListItem, ListItemText} from "@material-ui/core";
-import {Link} from "react-router-dom";
-import {App} from "../../../codesets";
-
 
 const drawerWidth = 240;
 
@@ -77,16 +73,21 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
-    match: any;
+    match:any;
 }
 
-const CoursePage = (props: Props) => {
+const CreateAssignment = (props: Props) => {
 
     const classes = useStyles();
 
     const [open, setOpen] = React.useState<boolean>(true);
     const [user, setUser] = useState<any>(null);
-    const [course, setCourse] = useState<any>({});
+    const [newAssignment, setNewAssignment] = useState<any>({
+        assignmentName: "",
+        submitted: false, //Pass submitted value
+        grade: "",
+        courseId: props.match.params.courseCode //Pass course for which assignment is for
+    })
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -96,7 +97,7 @@ const CoursePage = (props: Props) => {
         setOpen(false);
     };
 
-    // Fetch user model and courselist
+    // Fetch user model on page load
     useEffect(() =>{
         axios.get("/api/users/get", {
             headers: getAuthHeaders()
@@ -105,22 +106,35 @@ const CoursePage = (props: Props) => {
         }).catch((err) => {
             console.log(err)
         })
+    },[])
 
-        // fetch courses
-        axios.get("/api/courses/get", {
-            params: {
-                courseCode: props.match.params.courseCode
-            },
-            headers: getAuthHeaders()
-        }).then((res: AxiosResponse) => {
-            setCourse(res.data);
-        }).catch(err => {
-            console.log(err)
-        })
-    },[props.match.params.courseCode])
+    const assignmentNameOnChange = (e: any) => {
+        setNewAssignment({...newAssignment, assignmentName: e.target.value});
+    }
 
-    console.log(course.courseAssignments);
-  
+    // const submittedOnChange = (e: any) => {
+    //     setNewAssignment({...newAssignment, submitted: e.target.value});
+    // }
+
+    // const gradeOnChange = (e: any) => {
+    //     setNewAssignment({...newAssignment, grade: e.target.value});
+    // }
+
+    const courseIdOnChange = (e: any) => {
+        setNewAssignment({...newAssignment, courseId: e.target.value});
+    }
+
+    const createAssignment = () => {
+        axios.post("/api/assignments/create",{
+            assignmentName: newAssignment.assignmentName,
+            submitted: newAssignment.submitted,
+            grade: newAssignment.grade,
+            courseId: newAssignment.courseId
+        }, {headers: getAuthHeaders()})
+            .then(() => {console.log("created")})
+            .catch((err) => {console.log(err)})
+    }
+
     return (
         <div>
             <ProfileDrawer user={user} open={open} handleOpen={handleDrawerOpen} handleClose={handleDrawerClose}/>
@@ -130,36 +144,38 @@ const CoursePage = (props: Props) => {
                 })}
             >
                 <Grid container direction={"column"}>
-                    <Grid justify={"flex-start"} container direction={"column"} item xs={12}>
+                    <Grid container item xs={4}>
                         <Typography variant={"h3"}>
-                            {course && course.courseCode}
+                            New Assignment Creation
                         </Typography>
                         <Typography variant={"body2"}>
-                            <strong> Description </strong>
-                            {course && course.courseName}
-                        </Typography>
-                        <Typography variant={"body2"}>
-                            <strong>Professor:</strong> {course && course.professor && course.professor.firstName + " " + course.professor.lastName}
+                            Register a new assignment to be made available to students
                         </Typography>
                     </Grid>
-                    <Grid container>
-                        <Typography variant={"h5"}>
-                            Assignments
-                        </Typography>          
-                        {/* Add Assignment List Here to be viewed in course page */}
-                        <Grid container direction={"column"} item>
-                            {course.courseAssignments !== null && course.courseAssignments !== undefined && course.courseAssignments.length > 0 && course.courseAssignments.map((assignment: App.Assignment,index: number) => {
-                                return (
-                                    <ListItem component={Link} to={`/course/register/${course.courseCode}`} button key={index}>
-                                        <ListItemText primary={assignment.assignmentName}/>
-                                    </ListItem>     
-                                )                             
-                            })}
+                    <Grid className={classes.container} container item>
+                        <Grid item>
+                            <TextField variant={"outlined"}
+                                       label={"Assignment Name"}
+                                       required
+                                       onChange={assignmentNameOnChange}
+                                       value={newAssignment.assignmentName}
+                            />
                         </Grid>
-                        <Grid className={classes.container} container item>
-                            <Grid item>
-                                <Button href={"/assignment/new/" + course.courseCode} color={"primary"} variant={"contained"}> Create Assignment </Button>
-                            </Grid>
+                    </Grid>
+                    <Grid className={classes.container} container item>
+                        <Grid item>
+                            <TextField variant={"outlined"}
+                                       label={"Assignment Course Code"}
+                                       required
+                                       onChange={courseIdOnChange}
+                                       value={newAssignment.courseId}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid className={classes.container} container item>
+                        <Grid item>
+                            <Button onClick={createAssignment} color={"primary"} variant={"contained"}> Create Assignment </Button>
+                            <Button href="/profile" color={"primary"} variant={"contained"}> Back To Profile </Button>
                         </Grid>
                     </Grid>
                 </Grid>
@@ -168,4 +184,4 @@ const CoursePage = (props: Props) => {
     )
 };
 
-export default CoursePage;
+export default CreateAssignment;
