@@ -8,6 +8,7 @@ import CourseList from "../views/courselist/CourseList";
 import CourseRegistration from "../views/course-registration/CourseRegistration";
 import {isSessionValid} from "../session";
 import CoursePage from "../views/course-page/CoursePage";
+import CreateAssignment from "../views/create-assignment/CreateAssignment";
 
 const Routes = () => {
   if(isSessionValid()) {
@@ -22,6 +23,8 @@ const Routes = () => {
             <Route path={"/courselist"} exact component={CourseList}/>
             <Route path={"/course/register/:courseCode"} exact component={CourseRegistration}/>
             <Route path={"/course/view/:courseCode"} exact component={CoursePage}/>
+            <Route path={"/assignment/new/:courseCode"} exact component={CreateAssignment}/>
+
             <Route error component={Profile}/>
           </Switch>
         </BrowserRouter>
