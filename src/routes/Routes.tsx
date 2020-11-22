@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route, BrowserRouter } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import Login from "../views/login/Login";
 import Register from "../views/login/Register";
 import Profile from "../views/profile/Profile";
@@ -13,12 +13,11 @@ import CreateAssignment from "../views/create-assignment/CreateAssignment";
 const Routes = () => {
   if(isSessionValid()) {
     return (
-        <BrowserRouter>
           <Switch>
-            <Route path={"/"} exact component={Login} />
+            <Route path={"/"} exact component={Profile} />
             <Route path={"/profile"} exact component={Profile} />
-            <Route path={"/login"} exact component={Login} />
-            <Route path={"/register"} exact component={Register} />
+            <Route path={"/login"} exact component={Profile} />
+            <Route path={"/register"} exact component={Profile} />
             <Route path={"/create-course"} exact component={CreateCourse}/>
             <Route path={"/courselist"} exact component={CourseList}/>
             <Route path={"/course/register/:courseCode"} exact component={CourseRegistration}/>
@@ -27,18 +26,15 @@ const Routes = () => {
 
             <Route error component={Profile}/>
           </Switch>
-        </BrowserRouter>
     );
   } else {
     return (
-        <BrowserRouter>
           <Switch>
             <Route path={"/"} exact component={Login} />
             <Route path={"/login"} exact component={Login} />
             <Route path={"/register"} exact component={Register} />
             <Route error component={Login}/>
           </Switch>
-        </BrowserRouter>
     );
   }
 

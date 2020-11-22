@@ -80,32 +80,11 @@ const CreateCourse = (props: Props) => {
 
     const classes = useStyles();
 
-    const [open, setOpen] = React.useState<boolean>(true);
-    const [user, setUser] = useState<any>(null);
     const [newCourse, setNewCourse] = useState<any>({
         courseCode: "",
         courseName: "",
         description: ""
     })
-
-    const handleDrawerOpen = () => {
-        setOpen(true);
-    };
-
-    const handleDrawerClose = () => {
-        setOpen(false);
-    };
-
-    // Fetch user model on page load
-    useEffect(() =>{
-        axios.get("/api/users/get", {
-            headers: getAuthHeaders()
-        }).then((res: AxiosResponse) => {
-            setUser(res.data)
-        }).catch((err) => {
-            console.log(err)
-        })
-    },[])
 
     const courseCodeOnChange = (e: any) => {
         setNewCourse({...newCourse, courseCode: e.target.value});
@@ -131,58 +110,51 @@ const CreateCourse = (props: Props) => {
 
     return (
         <div>
-            <ProfileDrawer user={user} open={open} handleOpen={handleDrawerOpen} handleClose={handleDrawerClose}/>
-            <main
-                className={clsx(classes.content, {
-                    [classes.contentShift]: open,
-                })}
-            >
-                <Grid container direction={"column"}>
-                    <Grid container item xs={4}>
-                        <Typography variant={"h3"}>
-                            New Course Creation
-                        </Typography>
-                        <Typography variant={"body2"}>
-                            Register a new course to be made available to students
-                        </Typography>
-                    </Grid>
-                    <Grid className={classes.container} container item>
-                        <Grid item>
-                            <TextField variant={"outlined"}
-                                       label={"Course Name"}
-                                       required
-                                       onChange={courseNameOnChange}
-                                       value={newCourse.courseName}
-                            />
-                        </Grid>
-                    </Grid>
-                    <Grid className={classes.container} container item>
-                        <Grid item>
-                            <TextField variant={"outlined"}
-                                       label={"Course Code"}
-                                       required
-                                       onChange={courseCodeOnChange}
-                                       value={newCourse.courseCode}
-                            />
-                        </Grid>
-                    </Grid>
-                    <Grid className={classes.container} container item>
-                        <Grid item>
-                            <TextField variant={"outlined"}
-                                       fullWidth
-                                       label={"Course Description"}
-                                       onChange={descriptionOnChange}
-                                       value={newCourse.description}
-                            />
-                        </Grid>
-                    </Grid>
-                    <Grid className={classes.container} container item>
-                        <Grid item>
-                            <Button onClick={createCourse} color={"primary"} variant={"contained"}> Create Course </Button>
-                        </Grid>
+            <Grid container direction={"column"}>
+                <Grid container item xs={4}>
+                    <Typography variant={"h3"}>
+                        New Course Creation
+                    </Typography>
+                    <Typography variant={"body2"}>
+                        Register a new course to be made available to students
+                    </Typography>
+                </Grid>
+                <Grid className={classes.container} container item>
+                    <Grid item>
+                        <TextField variant={"outlined"}
+                                   label={"Course Name"}
+                                   required
+                                   onChange={courseNameOnChange}
+                                   value={newCourse.courseName}
+                        />
                     </Grid>
                 </Grid>
-            </main>
+                <Grid className={classes.container} container item>
+                    <Grid item>
+                        <TextField variant={"outlined"}
+                                   label={"Course Code"}
+                                   required
+                                   onChange={courseCodeOnChange}
+                                   value={newCourse.courseCode}
+                        />
+                    </Grid>
+                </Grid>
+                <Grid className={classes.container} container item>
+                    <Grid item>
+                        <TextField variant={"outlined"}
+                                   fullWidth
+                                   label={"Course Description"}
+                                   onChange={descriptionOnChange}
+                                   value={newCourse.description}
+                        />
+                    </Grid>
+                </Grid>
+                <Grid className={classes.container} container item>
+                    <Grid item>
+                        <Button onClick={createCourse} color={"primary"} variant={"contained"}> Create Course </Button>
+                    </Grid>
+                </Grid>
+            </Grid>
         </div>
     )
 };
