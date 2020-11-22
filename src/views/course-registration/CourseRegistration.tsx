@@ -25,7 +25,7 @@ const CourseRegistration = (props: Props) => {
         }).catch(err => {
             console.log(err)
         })
-    },[])
+    },[props.match.params.courseCode])
 
     const registerToCourse = () => {
         axios.post("/api/courses/register", {
