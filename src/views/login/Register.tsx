@@ -33,6 +33,9 @@ const useStyles = makeStyles((theme: Theme) =>
     submit: {
       margin: theme.spacing(3, 0, 2),
     },
+    errors: {
+      width: "100%",
+    }
   })
 );
 
@@ -45,8 +48,44 @@ const Register = (props: Props) => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [enrollErrors, setEnrollErrors] = useState([""]);
+
+  /*
+  * Validates sign up form
+  * @returns ["string"] list of errors with the form
+  */
+  const validateForm = () => {
+    let formErrors = [];
+
+    if(firstName === ""){
+      formErrors.push("Invalid first name");
+    }
+
+    if(lastName === ""){
+      formErrors.push("Invalid last name");
+    }
+
+    if(email === "" ||
+       !(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email))){
+      formErrors.push("Invalid email");
+    }
+
+    if(password === "" || password.length < 8){
+      formErrors.push("Password must be at least 8 characters long");
+    }
+
+    return formErrors;
+  }
 
   const registerUser = () => {
+    setEnrollErrors([""]);
+    let formValidationErrors = validateForm();
+
+    if(formValidationErrors.length > 0){
+      setEnrollErrors(formValidationErrors);
+      return;
+    }
+
     axios.post('/api/auth/register', {
       firstName: firstName,
       lastName: lastName,
@@ -55,15 +94,30 @@ const Register = (props: Props) => {
     })
     .then(function (response: any) {
       if (response.status === 200) {
-        window.location.replace("/login");
+        window.location.replace(`/login?username=${email}`);
       }else{
-        console.log("Something went really wrong");
+        setEnrollErrors(["something went wrong :/"]);
       }
     })
     .catch(function (error: any) {
       console.log(error);
+      setEnrollErrors([error.message]);
     });
   };
+
+  const errorsList = (enrollErrors: string[]) => {
+    if(!enrollErrors || enrollErrors.length < 1){
+      return(null);
+    }
+
+    const listItems = enrollErrors.map((error: string) =>
+      <p key={error}>{error}</p>
+    );
+
+    return (
+      <div>{listItems}</div>
+    );
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -72,6 +126,9 @@ const Register = (props: Props) => {
         <Avatar className={classes.avatar}></Avatar>
         <Typography component="h1" variant="h5">
           Create An Account
+        </Typography>
+        <Typography className={classes.errors} component="div" variant="body1" color="error" align="left">
+          {errorsList(enrollErrors)}
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
@@ -139,7 +196,7 @@ const Register = (props: Props) => {
           >
             Sign Up
           </Button>
-          <Grid container justify="flex-end">
+          <Grid container justify="center">
             <Grid item>
               <Link href="/login" variant="body2">
                 Already have an account? Sign in
