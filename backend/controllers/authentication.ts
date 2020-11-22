@@ -26,7 +26,6 @@ export default class AuthenticationController implements Controller {
         );
         this.router.patch(`${this.path}`, authorize, this.patchUser);
         this.router.delete(`${this.path}`, authorize, this.deleteUser);
-        this.router.get(`${this.path}/verify`, this.verifyEmail);
         this.router.post(`${this.path}/resend_token`, this.resendToken);
         this.router.post(`${this.path}/reset_password`, this.resetPassword);
     }
@@ -56,7 +55,7 @@ export default class AuthenticationController implements Controller {
             await this.loginAuth();
             await passport.authenticate("local", (error, user) => {
                 if (!user) {
-                    return response.status(400).json({ error: error.message });
+                  return response.status(400).json({ error: error.message });
                 }
 
                 // ensure
@@ -79,6 +78,13 @@ export default class AuthenticationController implements Controller {
             new Strategy(
                 { usernameField: "email" },
                 async (username, password, done) => {
+                    // fail early if proper credentials are missing. do not perform external request
+                    if(username === "" || password === ""){
+                      throw new Error("Invalid credentials");
+                    }else if (!(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(username))){
+                      throw new Error("Invalid credentials");
+                    }
+
                     try {
                         // Tries to find the user matching the given username, regexp helps to query with case insensitivity
                         const user = await User.findOne({
@@ -138,17 +144,9 @@ export default class AuthenticationController implements Controller {
         }
     };
 
-    private verifyEmail = async (request: Request, response: Response) => {
-
-    };
-
     private resendToken = async (request: Request, response: Response) => {
-
     };
-
-
 
     private resetPassword = async (request: Request, response: Response) => {
-
     };
 }
