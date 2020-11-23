@@ -1,0 +1,57 @@
+import React, {useEffect, useState} from "react";
+import {Grid, Typography} from "@material-ui/core";
+import {getAuthHeaders} from "../../session";
+import {AxiosResponse} from "axios";
+import axios from "axios";
+
+interface Props {
+    match: any;
+}
+
+const AssignmentPage = (props: Props) => {
+
+    const [assignment, setAssignment] = useState<any>({});
+
+    // Fetch user model and courselist
+    useEffect(() =>{
+        // fetch courses
+        axios.get("/api/assignments/get", {
+            params: {
+                assignmentId: props.match.params.assignmentId
+            },
+            headers: getAuthHeaders()
+        }).then((res: AxiosResponse) => {
+            setAssignment(res.data);
+        }).catch(err => {
+            console.log(err)
+        })
+
+        
+    },[props.match.params.assignmentId])
+ 
+    return (
+        <div>
+            <Grid container direction={"column"}>
+                <Grid justify={"flex-start"} container direction={"column"} item xs={12}>
+                    <Typography variant={"body2"}>
+                        {assignment != null}
+                        <strong> {assignment.assignmentName} </strong>                                      
+                    </Typography>
+                </Grid>
+                <Grid container>           
+                        <Typography variant={"h5"}>
+                                Upload Assignment:
+                        </Typography>
+                        <Typography variant={"h5"}>
+                                {/* Add Assignment Here */}
+                                <input
+                                type="file"
+                            />
+                        </Typography>                   
+                </Grid>
+            </Grid>
+        </div>
+    )
+};
+
+export default AssignmentPage;
