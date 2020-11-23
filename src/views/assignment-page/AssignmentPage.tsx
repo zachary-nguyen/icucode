@@ -1,35 +1,8 @@
 import React, {useEffect, useState} from "react";
-import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 import {Grid, Typography} from "@material-ui/core";
 import {getAuthHeaders} from "../../session";
 import {AxiosResponse} from "axios";
 import axios from "axios";
-
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            display: 'flex',
-        },
-        menuButton: {
-            marginRight: theme.spacing(2),
-        },
-        hide: {
-            display: 'none',
-        },
-        drawerHeader: {
-            display: 'flex',
-            alignItems: 'center',
-            padding: theme.spacing(0, 1),
-            // necessary for content to be below app bar
-            ...theme.mixins.toolbar,
-            justifyContent: 'flex-end',
-        },
-        container: {
-            marginTop: "3%"
-        },
-    }),
-);
 
 interface Props {
     match: any;
