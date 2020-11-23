@@ -85,7 +85,7 @@ const CoursePage = (props: Props) => {
                         {course.courseAssignments !== null && course.courseAssignments !== undefined && course.courseAssignments.length > 0 && course.courseAssignments.map((assignment: App.Assignment,index: number) => {
                             return (
                                 // @ts-ignore
-                                <ListItem component={Link} to={`/assignment/view/${course.courseCode}/${assignment._id}`}>
+                                <ListItem component={Link} to={`/assignment/view/${course.courseCode}/${assignment._id}`} key={assignment._id}>
                                     <ListItemText primary={assignment.assignmentName}/>
                                 </ListItem>
                             )

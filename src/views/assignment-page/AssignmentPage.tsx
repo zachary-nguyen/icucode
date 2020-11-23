@@ -78,13 +78,13 @@ console.log("Props: " + props.match.params.assignmentId)
                 </Grid>
                 <Grid container>
                     <Typography variant={"h5"}>
-                        Upload Assignment Below
+                        Upload Assignment:
                     </Typography>
                     <Typography variant={"h5"}>
                         {/* Add Assignment Here */}
                         <input
                             type="file"
-                            ref="Upload" />
+                        />
                     </Typography>                   
                 </Grid>
             </Grid>
