@@ -68,7 +68,6 @@ export default class App {
      * Connect to the databases based on environment
      */
     private async connectToMongoDB() {
-        console.log(process.env.NODE_ENV === "development")
         const url = process.env.NODE_ENV !== "development" ? process.env.MONGODB_URI_PROD : process.env.MONGODB_URI_DEV;
         await mongoose
             .connect(url, {

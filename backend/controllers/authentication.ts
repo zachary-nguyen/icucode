@@ -37,7 +37,7 @@ export default class AuthenticationController implements Controller {
             user.lastName= request.body.lastName;
             user.email = request.body.email;
             user.setPassword(request.body.password);
-            user.facultyUser = true;
+            user.facultyUser = false;
             await user.save();
             return response.status(200).json("success")
         } catch (error) {

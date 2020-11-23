@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import clsx from 'clsx';
 import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -104,6 +104,9 @@ const ProfileDrawer = (props: Props) => {
     const classes = useStyles();
     const theme = useTheme();
 
+    useEffect(() => {
+        console.log("change")
+    }, [props.user])
     return (
         <div className={classes.root}>
             <CssBaseline />
@@ -153,7 +156,7 @@ const ProfileDrawer = (props: Props) => {
                 </div>
                 <Divider />
                 <List>
-                    <ListItem component={Link} to={"/profile"}button>
+                    <ListItem component={Link} to={"/profile"} button>
                         <ListItemIcon><SchoolIcon color={"primary"}/> </ListItemIcon>
                         <ListItemText primary={"My courses"} />
                     </ListItem>
@@ -172,7 +175,7 @@ const ProfileDrawer = (props: Props) => {
                             <ListItemText primary={"Create new course"} />
                         </ListItem>
                     }
-                    {props.user && props.user.facultyUser &&
+                    {props.user && !props.user.facultyUser &&
                         <ListItem color={"primary"} component={Link} to={"/courselist"} button key={"register"}>
                             <ListItemIcon><AddIcon color={"primary"}/></ListItemIcon>
                             <ListItemText primary={"Register to Course"} />

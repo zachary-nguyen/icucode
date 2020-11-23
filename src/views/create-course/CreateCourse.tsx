@@ -3,6 +3,7 @@ import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 import {Button, Grid, TextField, Typography} from "@material-ui/core";
 import {getAuthHeaders} from "../../session";
 import axios from "axios";
+import { useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -35,7 +36,14 @@ interface Props {
 
 const CreateCourse = (props: Props) => {
 
+    const history = useHistory();
+
     const classes = useStyles();
+
+    const [creationStatus, setCreationStatus] = useState({
+        error: "",
+        success: undefined
+    });
 
     const [newCourse, setNewCourse] = useState<any>({
         courseCode: "",
@@ -61,8 +69,19 @@ const CreateCourse = (props: Props) => {
             courseName: newCourse.courseName,
             description: newCourse.description
         }, {headers: getAuthHeaders()})
-            .then(() => {console.log("created")})
-            .catch((err) => {console.log(err)})
+            .then(() => {
+                setCreationStatus({
+                    success: true,
+                    error: ""
+                })
+                history.push("/profile")
+            })
+            .catch((err) => {
+                setCreationStatus({
+                    success: false,
+                    error: "Invalid Course Code"
+                })
+            })
     }
 
     return (
@@ -93,6 +112,8 @@ const CreateCourse = (props: Props) => {
                                    required
                                    onChange={courseCodeOnChange}
                                    value={newCourse.courseCode}
+                                   error={creationStatus.success}
+                                   helperText={creationStatus.error}
                         />
                     </Grid>
                 </Grid>
@@ -108,7 +129,7 @@ const CreateCourse = (props: Props) => {
                 </Grid>
                 <Grid className={classes.container} container item>
                     <Grid item>
-                        <Button onClick={createCourse} color={"primary"} variant={"contained"}> Create Course </Button>
+                        <Button disabled={newCourse.courseCode === "" || newCourse.courseName === ""} onClick={createCourse} color={"primary"} variant={"contained"}> Create Course </Button>
                     </Grid>
                 </Grid>
             </Grid>

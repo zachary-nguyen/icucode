@@ -8,6 +8,7 @@ import {getAuthHeaders, isSessionValid} from "./session";
 import {BrowserRouter} from "react-router-dom";
 import clsx from "clsx";
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
+import { useLocation } from 'react-router-dom'
 
 const drawerWidth = 240;
 
@@ -17,7 +18,7 @@ export const icucodeTheme = createMuiTheme({
         background: { paper: "#fff", default: "#fafafa" },
         primary: {
             light: "rgb(255,122,175)",
-            main: "#ec3052",
+            main: "#bf112b",
             dark: "#FF860017",
             contrastText: "#fff",
         },
@@ -39,6 +40,16 @@ export const icucodeTheme = createMuiTheme({
             disabled: "rgba(0, 0, 0, 0.38)",
             hint: "rgba(0, 0, 0, 0.38)",
         },
+    },
+    overrides: {
+        MuiButton: {
+            root: {
+                "&:hover":{
+                    backgroundColor: "rgba(236,48,82,0.8) !important"
+                }
+            }
+        }
+
     }
 });
 
@@ -104,6 +115,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
     }),
 );
+
 export const UserContext = createContext(null);
 
 function App() {
@@ -111,7 +123,7 @@ function App() {
 
     const [open, setOpen] = React.useState<boolean>(true);
     const [user, setUser] = useState<any>(null);
-
+    const location = useLocation();
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -129,12 +141,11 @@ function App() {
         }).catch((err) => {
             console.log(err)
         })
-    },[])
+    },[location])
 
 
       return (
           <MuiThemeProvider theme={icucodeTheme}>
-              <BrowserRouter>
                   {isSessionValid() ?
                       <UserContext.Provider value={user}>
                           <div className="App">
@@ -151,7 +162,6 @@ function App() {
                       :
                       <Routes/>
                   }
-              </BrowserRouter>
           </MuiThemeProvider>
 
       );
