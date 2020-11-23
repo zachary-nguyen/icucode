@@ -59,8 +59,6 @@ const CoursePage = (props: Props) => {
         })
     },[props.match.params.courseCode])
 
-    console.log(course.courseAssignments)
-
     return (
         <div>
             <Grid container direction={"column"}>

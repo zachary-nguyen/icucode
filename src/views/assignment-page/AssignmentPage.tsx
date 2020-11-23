@@ -4,9 +4,6 @@ import {Grid, Typography} from "@material-ui/core";
 import {getAuthHeaders} from "../../session";
 import {AxiosResponse} from "axios";
 import axios from "axios";
-import {Button, ListItem, ListItemText} from "@material-ui/core";
-import {Link} from "react-router-dom";
-import {App} from "../../../codesets";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -40,10 +37,7 @@ interface Props {
 
 const AssignmentPage = (props: Props) => {
 
-    const classes = useStyles();
-
     const [assignment, setAssignment] = useState<any>({});
-
 
     // Fetch user model and courselist
     useEffect(() =>{
@@ -61,31 +55,26 @@ const AssignmentPage = (props: Props) => {
 
         
     },[props.match.params.assignmentId])
-    
-console.log("Arrived at assignment page")
-console.log(assignment)
-console.log("Props: " + props.match.params.assignmentId)
-
-
+ 
     return (
         <div>
             <Grid container direction={"column"}>
                 <Grid justify={"flex-start"} container direction={"column"} item xs={12}>
                     <Typography variant={"body2"}>
-                        <strong> Assignment: </strong>
-                        {assignment.assignmentname}
+                        {assignment != null}
+                        <strong> {assignment.assignmentName} </strong>                                      
                     </Typography>
                 </Grid>
-                <Grid container>
-                    <Typography variant={"h5"}>
-                        Upload Assignment:
-                    </Typography>
-                    <Typography variant={"h5"}>
-                        {/* Add Assignment Here */}
-                        <input
-                            type="file"
-                        />
-                    </Typography>                   
+                <Grid container>           
+                        <Typography variant={"h5"}>
+                                Upload Assignment:
+                        </Typography>
+                        <Typography variant={"h5"}>
+                                {/* Add Assignment Here */}
+                                <input
+                                type="file"
+                            />
+                        </Typography>                   
                 </Grid>
             </Grid>
         </div>
