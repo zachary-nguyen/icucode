@@ -16,6 +16,7 @@ export default class AssignmentController implements Controller {
 
     private initializeRoutes() {
         this.router.get(`${this.path}/assignmentlist`,authorize, this.getAssignmentList);
+        this.router.get(`${this.path}/get`,authorize, this.getAssignment);
         this.router.post(`${this.path}/create`,authorize, this.createAssignment);
     }
 
@@ -26,6 +27,21 @@ export default class AssignmentController implements Controller {
         } catch (error) {
             return response.status(400).json(error);
         }
+    };
+
+    private getAssignment = async (request: Request, response: Response) => {
+        try {
+            console.log(request.query)
+            // @ts-ignore
+            const assignment = await Assignment.findOne({_id: request.query.assignmentId})
+
+            console.log(assignment)
+
+            return response.status(200).json(assignment)
+        } catch (error) {
+            return response.status(400).json(error);
+        }
+
     };
 
     private createAssignment = async (request: Request, response: Response) => {

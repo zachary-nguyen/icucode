@@ -17,7 +17,7 @@ const coursesSchemaDef: SchemaDef<App.Course> = {
     },
     courseAssignments: {
         type: [],
-        required: false
+        required: false,
     },
     professor:{
         type: ObjectId,

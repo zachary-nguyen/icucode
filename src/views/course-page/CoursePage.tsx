@@ -82,7 +82,8 @@ const CoursePage = (props: Props) => {
                     <Grid container direction={"column"} item>
                         {course.courseAssignments !== null && course.courseAssignments !== undefined && course.courseAssignments.length > 0 && course.courseAssignments.map((assignment: App.Assignment,index: number) => {
                             return (
-                                <ListItem component={Link} to={`/course/register/${course.courseCode}`} button key={index}>
+                                // @ts-ignore
+                                <ListItem component={Link} to={`/assignment/view/${course.courseCode}/${assignment._id}`} key={assignment._id}>
                                     <ListItemText primary={assignment.assignmentName}/>
                                 </ListItem>
                             )
