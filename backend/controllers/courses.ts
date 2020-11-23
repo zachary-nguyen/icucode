@@ -19,6 +19,7 @@ export default class CourseController implements Controller {
         this.router.get(`${this.path}/courselist`,authorize, this.getCourseList);
         this.router.post(`${this.path}/create`,authorize, this.createCourse);
         this.router.post(`${this.path}/register`,authorize, this.registerToCourse);
+        this.router.delete(`${this.path}/delete`,authorize, this.deleteCourse);
     }
 
     private getCourse = async (request: Request, response: Response) => {
@@ -51,7 +52,7 @@ export default class CourseController implements Controller {
             // @ts-ignore
             const user = await User.findById(request.user._id);
 
-            course.courseCode = request.body.courseCode;
+            course.courseCode = request.body.courseCode.replace(/\s/g,'').toUpperCase();
             course.courseName = request.body.courseName;
             course.description = request.body.description;
             // @ts-ignore
@@ -85,6 +86,26 @@ export default class CourseController implements Controller {
             await user.save().catch(err=>console.log(err))
             return response.status(200).json(course);
 
+        } catch (error) {
+            return response.status(400).json(error);
+        }
+    };
+
+
+    private deleteCourse = async (request: Request, response: Response) => {
+        try {
+            // @ts-ignore
+            const user = await User.findById(request.user._id);
+            const course = await Course.findOne({courseCode: request.body.courseCode})
+
+            if(user._id === course.professor) {
+
+                await Course.remove({courseCode: request.body.courseCode});
+                return response.status(200);
+            } else {
+                return response.status(403).json({error: "Not authorized to remove this course"});
+
+            }
         } catch (error) {
             return response.status(400).json(error);
         }
