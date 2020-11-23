@@ -33,8 +33,12 @@ declare namespace App {
         grade: String;
         // @ts-ignore
         courseId: Course["_id"];
+        uploads: {};
+    }
+
+    interface Upload {
+                
     }
 
     export type UserDoc = MongooseDocument & User;
-
 }

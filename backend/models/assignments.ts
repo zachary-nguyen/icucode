@@ -22,11 +22,13 @@ const assignmentSchemaDef: SchemaDef<App.Assignment> = {
         type: ObjectId,
         ref: "Course",
         required: true
+    },
+    uploads: {
+        type: [],
+        required: false
     }
-
 };
 
 const assignmentSchema = new Schema(assignmentSchemaDef, { timestamps: true });
 
-// export const userModelName = "User";
 export default model<AssignmentDoc>("Assignment", assignmentSchema);
