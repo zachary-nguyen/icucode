@@ -58,10 +58,7 @@ export default class FileUploadController implements Controller {
             const file = await File.findOne({_id: "5fbbd028dd29f6264c869bd1"});
 
             console.log(file)
-            // @ts-ignore
-            fs.writeFileSync(`./tmp/${file.meta_data.originalname}`, file.data.buffer, {});
-
-            return response.status(200).json("fetched")
+            return response.status(200).json(file.data.buffer)
         } catch (error) {
             console.log(error)
             return response.status(400).json(error);

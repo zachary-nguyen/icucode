@@ -10,7 +10,9 @@ import {App} from "../../../codesets";
 import {UserContext} from "../../App";
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useHistory } from 'react-router-dom'
-
+import ReactAce from "react-ace";
+import "ace-builds/src-noconflict/mode-java";
+import "ace-builds/src-noconflict/theme-github";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -48,6 +50,7 @@ const CoursePage = (props: Props) => {
 
     const [course, setCourse] = useState<any>({});
     const [file,setFile] = useState(null);
+    const [fileContent, setFileContent] = useState("");
 
     // Fetch user model and courselist
     useEffect(() =>{
@@ -91,6 +94,19 @@ const CoursePage = (props: Props) => {
         axios.post("/api/upload/upload", formData)
             .then(() => {
                 console.log("Upload")
+            })
+            .catch(err=> console.log(err))
+    }
+
+    const showFile = () => {
+        axios.get("/api/upload/fetch", {
+            params: {
+                fileId: ""
+            },
+            headers: getAuthHeaders()
+        })
+            .then((res) => {
+                setFileContent(Buffer.from(res.data.data).toString("utf8"));
             })
             .catch(err=> console.log(err))
     }
@@ -140,6 +156,16 @@ const CoursePage = (props: Props) => {
                                 </Grid>
                                 <input type={"file"} onChange={onFileChange} name={"sourceFile"}/>
                                 <Button onClick={upload}>Submit</Button>
+                                <Button onClick={showFile}>Show File</Button>
+                            </Grid>
+                            <Grid container xs={12}>
+                                <ReactAce
+                                    mode={"java"}
+                                    theme={"github"}
+                                    width={"100%"}
+                                    readOnly={true}
+                                    value={fileContent}
+                                />
                             </Grid>
                         </Grid>
                     </Grid>
