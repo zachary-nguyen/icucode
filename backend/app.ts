@@ -8,6 +8,7 @@ import * as mongoose from "mongoose";
 export default class App {
     public app: express.Application;
     public port: number;
+    public upload;
 
     /**
      * Enable cors
@@ -69,6 +70,7 @@ export default class App {
      */
     private async connectToMongoDB() {
         const url = process.env.NODE_ENV !== "development" ? process.env.MONGODB_URI_PROD : process.env.MONGODB_URI_DEV;
+
         await mongoose
             .connect(url, {
                 useNewUrlParser: true,
@@ -82,6 +84,8 @@ export default class App {
             .catch((err) => {
                 console.log("Unable to connect to db ", err);
             });
+
     }
+
 
 }

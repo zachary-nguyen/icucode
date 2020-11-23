@@ -35,6 +35,11 @@ declare namespace App {
         courseId: Course["_id"];
     }
 
+    interface File {
+        data: any;
+        meta_data: any;
+    }
+
     export type UserDoc = MongooseDocument & User;
 
 }

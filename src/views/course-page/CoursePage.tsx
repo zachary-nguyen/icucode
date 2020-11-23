@@ -47,6 +47,7 @@ const CoursePage = (props: Props) => {
     const history = useHistory();
 
     const [course, setCourse] = useState<any>({});
+    const [file,setFile] = useState(null);
 
     // Fetch user model and courselist
     useEffect(() =>{
@@ -76,6 +77,23 @@ const CoursePage = (props: Props) => {
             console.log(err)
         })
     };
+
+    const onFileChange = (e: any) => {
+        console.log(e.target.files)
+        setFile(e.target.files[0])
+    }
+
+    const upload = () => {
+        const formData = new FormData();
+        console.log(file)
+        formData.append("sourceFile", file);
+
+        axios.post("/api/upload/upload", formData)
+            .then(() => {
+                console.log("Upload")
+            })
+            .catch(err=> console.log(err))
+    }
 
     return (
         <UserContext.Consumer>
@@ -120,6 +138,8 @@ const CoursePage = (props: Props) => {
                                 <Grid item>
                                     <Button href={"/assignment/new/" + course.courseCode} color={"primary"} variant={"contained"}> Create Assignment </Button>
                                 </Grid>
+                                <input type={"file"} onChange={onFileChange} name={"sourceFile"}/>
+                                <Button onClick={upload}>Submit</Button>
                             </Grid>
                         </Grid>
                     </Grid>
