@@ -68,7 +68,7 @@ export default class FileUploadController implements Controller {
                 try{
                     const newFile = new File();
                     // @ts-ignore
-                    const data: any = await fs.readFileSync(path.resolve(__dirname,"..", "backend", "tmp",`${file.filename}`), "utf8", (err,data) => {
+                    const data: any = await fs.readFileSync(process.env.NODE_ENV !== "development" ? path.resolve(__dirname, "backend", "tmp", `${file.filename}`) : path.resolve(__dirname, "..", "backend", "tmp", `${file.filename}`), "utf8", (err,data) => {
                         if (err) {
                             console.log(err)
                             return response.status(400);
@@ -79,7 +79,7 @@ export default class FileUploadController implements Controller {
                     // @ts-ignore
                     newFile.meta_data = file;
 
-                    await fs.unlinkSync(path.resolve(__dirname,"..", "backend", "tmp",`${file.filename}`));
+                    await fs.unlinkSync(process.env.NODE_ENV !== "development" ? path.resolve(__dirname, "backend", "tmp",`${file.filename}`) : path.resolve(__dirname, "..", "backend", "tmp", `${file.filename}`));
 
                     await newFile.save();
 
@@ -126,7 +126,7 @@ export default class FileUploadController implements Controller {
         try {
             const file = new File();
             // @ts-ignore
-            const data: any = fs.readFileSync(path.resolve(__dirname,"..", "backend", "tmp",`${request.file.filename}`), "utf8", (err,data) => {
+            const data: any = fs.readFileSync(process.env.NODE_ENV !== "development" ? path.resolve(__dirname, "backend", "tmp", `${request.file.filename}`) : path.resolve(__dirname, "..", "backend", "tmp", `${request.file.filename}`), "utf8", (err,data) => {
                 if (err) {
                     console.log(err)
                     return response.status(400);
@@ -141,7 +141,7 @@ export default class FileUploadController implements Controller {
 
             // Remove tmp file
             // @ts-ignore
-            fs.unlinkSync(path.resolve(__dirname,"..", "backend", "tmp",`${request.file.filename}`));
+            fs.unlinkSync(process.env.NODE_ENV !== "development" ? path.resolve(__dirname, "backend", "tmp", `${request.file.filename}`) : path.resolve(__dirname, "..", "backend", "tmp", `${request.file.filename}`));
 
             await file.save();
 
