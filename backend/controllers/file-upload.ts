@@ -8,6 +8,7 @@ import File from "../models/file";
 import * as fs from "fs";
 import Submission from "../models/submission"
 import Assignment from "../models/assignments"
+import * as path from "path"
 
 const Binary = mongo.Binary;
 
@@ -52,7 +53,7 @@ export default class FileUploadController implements Controller {
                 try{
                     const newFile = new File();
                     // @ts-ignore
-                    const data: any = await fs.readFileSync(`./tmp/${file.filename}`, "utf8", (err,data) => {
+                    const data: any = await fs.readFileSync(path.resolve(__dirname,"..", "backend", "tmp",`${file.filename}`), "utf8", (err,data) => {
                         if (err) {
                             console.log(err)
                             return response.status(400);
@@ -64,7 +65,7 @@ export default class FileUploadController implements Controller {
                     newFile.meta_data = file;
 
                     // // @ts-ignore
-                    await fs.unlinkSync(`./tmp/${file.filename}`);
+                    await fs.unlinkSync(path.resolve(__dirname,"..", "backend", "tmp",`${file.filename}`));
 
                     await newFile.save();
 
@@ -116,9 +117,10 @@ export default class FileUploadController implements Controller {
     private uploadFile = async (request: Request, response: Response) => {
         try {
             const file = new File();
-
             // @ts-ignore
-            const data: any = fs.readFileSync(`./tmp/${request.file.filename}`, "utf8", (err,data) => {
+            console.log(path.resolve(__dirname,"..", "backend", "tmp",`${request.file.filename}`))
+            // @ts-ignore
+            const data: any = fs.readFileSync(path.resolve(__dirname,"..", "backend", "tmp",`${request.file.filename}`), "utf8", (err,data) => {
                 if (err) {
                     console.log(err)
                     return response.status(400);
@@ -133,7 +135,7 @@ export default class FileUploadController implements Controller {
 
             // Remove tmp file
             // @ts-ignore
-            fs.unlinkSync(`./tmp/${request.file.filename}`);
+            fs.unlinkSync(path.resolve(__dirname,"..", "backend", "tmp",`${request.file.filename}`));
 
             await file.save();
 
