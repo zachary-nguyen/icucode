@@ -11,6 +11,7 @@ import { UserContext } from "../../App";
 interface Props {
 
 }
+
 const Profile = (props: Props) => {
 
     return (

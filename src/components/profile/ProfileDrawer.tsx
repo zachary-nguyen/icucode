@@ -153,7 +153,7 @@ const ProfileDrawer = (props: Props) => {
                 </div>
                 <Divider />
                 <List>
-                    <ListItem component={Link} to={"/profile"}button>
+                    <ListItem component={Link} to={"/profile"} button>
                         <ListItemIcon><SchoolIcon color={"primary"}/> </ListItemIcon>
                         <ListItemText primary={"My courses"} />
                     </ListItem>
@@ -172,7 +172,7 @@ const ProfileDrawer = (props: Props) => {
                             <ListItemText primary={"Create new course"} />
                         </ListItem>
                     }
-                    {props.user && props.user.facultyUser &&
+                    {props.user && !props.user.facultyUser &&
                         <ListItem color={"primary"} component={Link} to={"/courselist"} button key={"register"}>
                             <ListItemIcon><AddIcon color={"primary"}/></ListItemIcon>
                             <ListItemText primary={"Register to Course"} />

@@ -29,15 +29,24 @@ declare namespace App {
 
     interface Assignment {
         assignmentName: string;
-        submitted: boolean;
-        grade: String;
         // @ts-ignore
         courseId: Course["_id"];
-        uploads: {};
+        // @ts-ignore
+        submissions: Submission["_id"][];
     }
 
-    interface Upload {
-                
+    interface Submission {
+        // @ts-ignore
+        studentId: User["_id"];
+        // @ts-ignore
+        files: File["_id"][];
+        submitted: boolean;
+        grade: String;
+    }
+
+    interface File {
+        data: any;
+        meta_data: any;
     }
 
     export type UserDoc = MongooseDocument & User;

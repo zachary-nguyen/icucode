@@ -141,7 +141,7 @@ const CourseList = (props: Props) => {
                             return (
                                  <ListItem component={Link} to={`/assignment/new`} button key={index}>
                                      <ListItemIcon><ClassIcon color={"primary"}/></ListItemIcon>
-                                     <ListItemText primary={assignment.courseId + " - " + assignment.assignmentName} secondary={assignment.submitted}/>
+                                     <ListItemText primary={assignment.courseId + " - " + assignment.assignmentName}/>
                                  </ListItem>
                             )
                         })}

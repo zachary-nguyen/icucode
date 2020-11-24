@@ -60,12 +60,13 @@ export default class CourseController implements Controller {
 
             // add new course to professor
             user.courses.push(course);
-            await course.save().catch(err=>console.log(err))
-            await user.save().catch(err=>console.log(err))
+
+            await course.save();
+            await user.save();
             return response.status(200).json(course);
 
         } catch (error) {
-            return response.status(400).json(error);
+            return response.status(400).json("Invalid Course Code");
         }
     };
 
@@ -96,15 +97,14 @@ export default class CourseController implements Controller {
         try {
             // @ts-ignore
             const user = await User.findById(request.user._id);
-            const course = await Course.findOne({courseCode: request.body.courseCode})
+            const course = await Course.findOne({courseCode: String(request.query.courseCode)})
 
-            if(user._id === course.professor) {
-
-                await Course.remove({courseCode: request.body.courseCode});
-                return response.status(200);
+            // Verify that the user trying to delete is the creator
+            if(user._id.equals(course.professor)) {
+                await Course.deleteOne({courseCode: String(request.query.courseCode)}).catch(err=> console.log(err));
+                return response.status(200).json({message: "Success"});
             } else {
                 return response.status(403).json({error: "Not authorized to remove this course"});
-
             }
         } catch (error) {
             return response.status(400).json(error);
