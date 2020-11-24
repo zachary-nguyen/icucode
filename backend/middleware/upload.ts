@@ -5,7 +5,7 @@ const multer = require("multer");
 // Middleware
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, path.resolve(__dirname,"..", "backend", "tmp"))
+        cb(null, process.env.NODE_ENV !== "development" ? path.resolve(__dirname, "backend", "tmp") : path.resolve(__dirname, "..", "backend", "tmp"))
     },
     filename: function(req, file, cb){
         cb(null,file.originalname);
