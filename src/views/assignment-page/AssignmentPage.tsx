@@ -95,18 +95,24 @@ const AssignmentPage = (props: Props) => {
     });
     const [selectedFile, setSelectedFile] = useState(0);
     const [fileContent, setFileContent] = useState([]);
-    console.log(assignment)
 
     // Fetch user model and courselist
-    useEffect(() =>{
+    useEffect( () =>{
         // fetch courses
         axios.get("/api/assignments/get", {
             params: {
                 assignmentId: props.match.params.assignmentId
             },
             headers: getAuthHeaders()
-        }).then((res: AxiosResponse) => {
+        }).then(async (res: AxiosResponse) => {
             setAssignment(res.data);
+
+            if(res.data.submissions[0].files.length > 0){
+                // populate states
+                console.log(res.data)
+                setFiles(res.data.submissions[0].files.map((f:any)=> f.meta_data));
+                setFileContent(res.data.submissions[0].files.map((f:any) => Buffer.from(f.data).toString("utf8")));
+            }
         }).catch(err => {
             console.log(err)
         })
@@ -154,6 +160,7 @@ const AssignmentPage = (props: Props) => {
                     if(res.status === 200) {
                         if(res.status === 200) {
                             setUploadStatus({status: true})
+                            setAssignment(res.data)
                         }
                     }
                 })
@@ -163,6 +170,7 @@ const AssignmentPage = (props: Props) => {
                 .then((res) => {
                     if(res.status === 200) {
                         setUploadStatus({status: true})
+                        setAssignment(res.data)
                     }
                 })
                 .catch(err=> setUploadStatus({status: false}))
@@ -211,7 +219,7 @@ const AssignmentPage = (props: Props) => {
                         </Grid>
                 </Grid>
                 <Grid item>
-                    {files.length > 0 && files[selectedFile].name}
+                    {files.length > 0 && (files[selectedFile].name || files[selectedFile].filename)}
                 </Grid>
                 {fileContent  &&
                     <Grid direction={"row"} item container xs={12}>
@@ -219,9 +227,9 @@ const AssignmentPage = (props: Props) => {
                             <List className={classes.fileList}>
                                 {files.length > 0 && Array.from(files).map((file, index)=> {
                                     return(
-                                        <ListItem className={index === selectedFile ? classes.listItemSelect : ""} onClick={() => {setSelectedFile(index)}} key={file.name} button>
+                                        <ListItem className={index === selectedFile ? classes.listItemSelect : ""} onClick={() => {setSelectedFile(index)}} key={file.name || file.filename} button>
                                             <ListItemIcon><FileCopyIcon color={"primary"}/> </ListItemIcon>
-                                            <ListItemText disableTypography={true} primary={file.name} />
+                                            <ListItemText disableTypography={true} primary={file.filename || file.name } />
                                         </ListItem>
                                     )
                                 })}

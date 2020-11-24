@@ -12,6 +12,9 @@ module.exports = {
     resolve: {
         extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"]
     },
+    node: {
+        __dirname: false
+    },
     module: {
         rules: [
             {
