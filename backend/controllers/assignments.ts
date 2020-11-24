@@ -44,8 +44,8 @@ export default class AssignmentController implements Controller {
 
             // Return submission for students
             // @ts-ignore
-            assignment.submissions = assignment.submissions.filter(submission => submission.studentId !== request.user_id);
-
+            assignment.submissions.filter(submission => submission.studentId !== request.user_id);
+            assignment.submissions[0].files =  assignment.submissions[0].files.map(f => f.data = f.data.buffer); // return buffer
             return response.status(200).json(assignment)
         } catch (error) {
             return response.status(400).json(error);

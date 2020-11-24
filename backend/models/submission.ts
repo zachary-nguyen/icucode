@@ -9,6 +9,7 @@ const submissionSchemaDef: SchemaDef<App.Submission> = {
     studentId:{
         type: ObjectId,
         ref: "User",
+        unique: true,
         required: true
     },
     grade: {

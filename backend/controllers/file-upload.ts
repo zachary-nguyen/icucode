@@ -35,13 +35,24 @@ export default class FileUploadController implements Controller {
      */
     private uploadMultiFile = async (request: Request, response: Response) => {
         try {
+            // ----- GET ALL MODELS ------
+
             // @ts-ignore
             const files = request.files;
 
-            //-------- Create/Edit submission --------
-            //@ts-ignore
-            let submission = await Submission.findOne({studentId: request.user_id});
+            const assignment : any = await Assignment.findOne({_id: request.body.assignmentId})
+                .populate({
+                    path: "submissions",
+                    model: "Submission",
+                    populate: {
+                        path: "files",
+                        model: "File"
+                    }
+                })
 
+            //-------- Verify if student has made a submission --------
+            //@ts-ignore
+            let submission = assignment.submissions.filter(s => s.studentId !== request.user._id)[0];
             if(!submission) {
                 submission = new Submission();
                 //@ts-ignore
@@ -49,6 +60,10 @@ export default class FileUploadController implements Controller {
                 submission.submitted = false;
             }
 
+            // Reset submission files
+            submission.files = [];
+
+            // ---- Populate submision model with Files
             for(let file of files) {
                 try{
                     const newFile = new File();
@@ -64,11 +79,11 @@ export default class FileUploadController implements Controller {
                     // @ts-ignore
                     newFile.meta_data = file;
 
-                    // // @ts-ignore
                     await fs.unlinkSync(path.resolve(__dirname,"..", "backend", "tmp",`${file.filename}`));
 
                     await newFile.save();
 
+                    // @ts-ignore
                     submission.files.push(newFile);
 
                 } catch (err) {
@@ -77,32 +92,25 @@ export default class FileUploadController implements Controller {
             }
 
             //-------- Add submission to assignment --------
-            const assignment : any = await Assignment.findOne({_id: request.body.assignmentId})
-                .populate({
-                    path: "submissions",
-                    model: "Submission"
-                })
-
             if(assignment) {
-                if(assignment.submissions.length > 0) {
-                    assignment.submissions.map((sub) => {
-                        // If student already submitted we update
-                        //@ts-ignore
-                        if(sub.studentId === request.user_id) {
-                            return submission;
-                        }
-                        return sub;
-                    })
-                } else {
-                    assignment.submissions.push(submission)
-                }
-
+                assignment.submissions = submission;
             }
 
-            await assignment.save();
-            await submission.save();
+            if(submission) {
+                await submission.save();
+            }
+            const updatedAssignment : any = await Assignment.findOne({_id: request.body.assignmentId})
+                .populate({
+                    path: "submissions",
+                    model: "Submission",
+                    populate: {
+                        path: "files",
+                        model: "File"
+                    }
+                })
 
-            return response.status(200).json("Uploaded")
+            return response.status(200).json(updatedAssignment)
+
         } catch (error) {
             console.log(error)
             return response.status(400).json(error);
@@ -117,8 +125,6 @@ export default class FileUploadController implements Controller {
     private uploadFile = async (request: Request, response: Response) => {
         try {
             const file = new File();
-            // @ts-ignore
-            console.log(path.resolve(__dirname,"..", "backend", "tmp",`${request.file.filename}`))
             // @ts-ignore
             const data: any = fs.readFileSync(path.resolve(__dirname,"..", "backend", "tmp",`${request.file.filename}`), "utf8", (err,data) => {
                 if (err) {
@@ -139,13 +145,24 @@ export default class FileUploadController implements Controller {
 
             await file.save();
 
-            //-------- Create/Edit submission --------
+            //-------- Add submission to assignment --------
+            const assignment : any = await Assignment.findOne({_id: request.body.assignmentId})
+                .populate({
+                    path: "submissions",
+                    model: "Submission",
+                    populate: {
+                        path: "files",
+                        model: "File"
+                    }
+                })
+
+
             //@ts-ignore
-            let submission = await Submission.findOne({studentId: request.user_id});
+            let submission = assignment.submissions.filter(submission => submission.studentId !== request.user_id)[0];
 
             // If submission exist we edit
             if(submission) {
-                submission.files.push(file);
+                submission.files = [file];
             } else {
                 submission = new Submission();
                 // @ts-ignore
@@ -154,24 +171,18 @@ export default class FileUploadController implements Controller {
                 submission.files = [file];
             }
 
-
-            //-------- Add submission to assignment --------
-            const assignment : any = await Assignment.findOne({_id: request.body.assignmentId})
-                .populate({
-                    path: "submissions",
-                    model: "Submission"
-                })
-
             if(assignment) {
+                let newSubmission = [];
                 if(assignment.submissions.length > 0) {
-                    assignment.submissions.map((sub) => {
-                        // If student already submitted we update
-                        //@ts-ignore
-                        if(sub.studentId === request.user_id) {
-                            return submission;
-                        }
-                        return sub;
-                    })
+                    newSubmission = assignment.submissions.map((sub) => {
+                            // If student already submitted we update
+                            //@ts-ignore
+                            if(sub.studentId === request.user_id) {
+                                return submission;
+                            }
+                            return sub;
+                        })
+                    assignment.submissions = newSubmission;
                 } else {
                     assignment.submissions.push(submission)
                 }
@@ -181,7 +192,17 @@ export default class FileUploadController implements Controller {
             await submission.save();
             await assignment.save();
 
-            return response.status(200).json(file._id)
+            const updatedAssignment : any = await Assignment.findOne({_id: request.body.assignmentId})
+                .populate({
+                    path: "submissions",
+                    model: "Submission",
+                    populate: {
+                        path: "files",
+                        model: "File"
+                    }
+                })
+
+            return response.status(200).json(updatedAssignment)
         } catch (error) {
             console.log(error)
             return response.status(400).json(error);
