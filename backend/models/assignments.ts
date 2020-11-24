@@ -10,22 +10,16 @@ const assignmentSchemaDef: SchemaDef<App.Assignment> = {
        type: String,
        required: true
     },
-    submitted:{
-       type: Boolean,
-       required: true
-    },
-    grade: {
-        type: String,
-        required: false
-    },
     courseId: {
         type: ObjectId,
         ref: "Course",
         required: true
     },
-    uploads: {
-        type: [],
-        required: false
+    submissions: {
+        type: [ObjectId],
+        ref: "Upload",
+        required: true,
+        default: []
     }
 };
 

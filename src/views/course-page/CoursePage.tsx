@@ -10,9 +10,7 @@ import {App} from "../../../codesets";
 import {UserContext} from "../../App";
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useHistory } from 'react-router-dom'
-import ReactAce from "react-ace";
-import "ace-builds/src-noconflict/mode-java";
-import "ace-builds/src-noconflict/theme-github";
+
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -49,8 +47,6 @@ const CoursePage = (props: Props) => {
     const history = useHistory();
 
     const [course, setCourse] = useState<any>({});
-    const [file,setFile] = useState(null);
-    const [fileContent, setFileContent] = useState("");
 
     // Fetch user model and courselist
     useEffect(() =>{
@@ -81,35 +77,6 @@ const CoursePage = (props: Props) => {
         })
     };
 
-    const onFileChange = (e: any) => {
-        console.log(e.target.files)
-        setFile(e.target.files[0])
-    }
-
-    const upload = () => {
-        const formData = new FormData();
-        console.log(file)
-        formData.append("sourceFile", file);
-
-        axios.post("/api/upload/upload", formData)
-            .then(() => {
-                console.log("Upload")
-            })
-            .catch(err=> console.log(err))
-    }
-
-    const showFile = () => {
-        axios.get("/api/upload/fetch", {
-            params: {
-                fileId: ""
-            },
-            headers: getAuthHeaders()
-        })
-            .then((res) => {
-                setFileContent(Buffer.from(res.data.data).toString("utf8"));
-            })
-            .catch(err=> console.log(err))
-    }
 
     return (
         <UserContext.Consumer>
@@ -144,7 +111,8 @@ const CoursePage = (props: Props) => {
                             <Grid container direction={"column"} item>
                                 {course.courseAssignments !== null && course.courseAssignments !== undefined && course.courseAssignments.length > 0 && course.courseAssignments.map((assignment: App.Assignment,index: number) => {
                                     return (
-                                        <ListItem component={Link} to={`/course/register/${course.courseCode}`} button key={index}>
+                                        // @ts-ignore
+                                        <ListItem component={Link} button to={`/assignment/view/${course.courseCode}/${assignment._id}`} key={assignment._id}>
                                             <ListItemText primary={assignment.assignmentName}/>
                                         </ListItem>
                                     )
@@ -154,18 +122,6 @@ const CoursePage = (props: Props) => {
                                 <Grid item>
                                     <Button href={"/assignment/new/" + course.courseCode} color={"primary"} variant={"contained"}> Create Assignment </Button>
                                 </Grid>
-                                <input type={"file"} onChange={onFileChange} name={"sourceFile"}/>
-                                <Button onClick={upload}>Submit</Button>
-                                <Button onClick={showFile}>Show File</Button>
-                            </Grid>
-                            <Grid container xs={12}>
-                                <ReactAce
-                                    mode={"java"}
-                                    theme={"github"}
-                                    width={"100%"}
-                                    readOnly={true}
-                                    value={fileContent}
-                                />
                             </Grid>
                         </Grid>
                     </Grid>

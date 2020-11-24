@@ -5,7 +5,6 @@ import {createMuiTheme, MuiThemeProvider} from "@material-ui/core";
 import ProfileDrawer from "./components/profile/ProfileDrawer";
 import axios, {AxiosResponse} from "axios";
 import {getAuthHeaders, isSessionValid} from "./session";
-import {BrowserRouter} from "react-router-dom";
 import clsx from "clsx";
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 import { useLocation } from 'react-router-dom'
@@ -142,7 +141,6 @@ function App() {
             console.log(err)
         })
     },[location])
-
 
       return (
           <MuiThemeProvider theme={icucodeTheme}>

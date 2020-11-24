@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -104,9 +104,6 @@ const ProfileDrawer = (props: Props) => {
     const classes = useStyles();
     const theme = useTheme();
 
-    useEffect(() => {
-        console.log("change")
-    }, [props.user])
     return (
         <div className={classes.root}>
             <CssBaseline />

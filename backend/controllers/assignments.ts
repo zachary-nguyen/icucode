@@ -31,11 +31,20 @@ export default class AssignmentController implements Controller {
 
     private getAssignment = async (request: Request, response: Response) => {
         try {
-            console.log(request.query)
             // @ts-ignore
-            const assignment = await Assignment.findOne({_id: request.query.assignmentId})
+            let assignment = await Assignment.findOne({_id: request.query.assignmentId})
+                .populate({
+                    path: "submissions",
+                    model: "Submission",
+                    populate: {
+                        path: "files",
+                        model: "File"
+                    }
+                })
 
-            console.log(assignment)
+            // Return submission for students
+            // @ts-ignore
+            assignment.submissions = assignment.submissions.filter(submission => submission.studentId !== request.user_id);
 
             return response.status(200).json(assignment)
         } catch (error) {
@@ -52,8 +61,7 @@ export default class AssignmentController implements Controller {
             // @ts-ignore
 
             assignment.assignmentName = request.body.assignmentName;
-            assignment.submitted = false;
-            assignment.grade = "";
+
             // @ts-ignore
           
             assignment.courseId = course._id;             
