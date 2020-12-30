@@ -58,6 +58,7 @@ export default class FileUploadController implements Controller {
                 //@ts-ignore
                 submission.studentId = request.user._id;
                 submission.submitted = false;
+                submission.compiled = false;
             }
 
             // Reset submission files

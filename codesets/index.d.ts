@@ -41,6 +41,7 @@ declare namespace App {
         // @ts-ignore
         files: File["_id"][];
         submitted: boolean;
+        compiled: boolean;
         grade: String;
     }
 

@@ -19,6 +19,10 @@ const submissionSchemaDef: SchemaDef<App.Submission> = {
         type: Boolean,
         required: true,
     },
+    compiled:{
+        type: Boolean,
+        required: false,
+    },
     files: {
         type: [ObjectId],
         ref: "File",
