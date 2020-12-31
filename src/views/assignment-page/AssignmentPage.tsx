@@ -117,7 +117,7 @@ const AssignmentPage = (props: Props) => {
             console.log(err)
         })
 
-        
+
     },[props.match.params.assignmentId])
 
     /**
@@ -187,6 +187,15 @@ const AssignmentPage = (props: Props) => {
         setUploadStatus({status: null});
     };
 
+    const assignmentIsCompiled = (assignment: any) =>{
+      if(assignment.submissions && assignment.submissions.length > 0){
+        if(assignment.submissions[0].compiled){
+          return true;
+        }
+      }
+      return false;
+    }
+
     return (
         <div>
             <Grid container direction={"column"}>
@@ -208,6 +217,9 @@ const AssignmentPage = (props: Props) => {
                             <Grid className={classes.actionContainer} justify="center" direction={"row"} item container xs={12}>
                                 <Grid item xs={2}>
                                     Grade: {assignment.length === 0 ? assignment.grade : "Not Graded"}
+                                </Grid>
+                                <Grid item xs={2}>
+                                    Compiled: { assignmentIsCompiled(assignment) ? "Finished compiling" : "Not Compiled" }
                                 </Grid>
                                 <div className={classes.flexGrow}/>
                                 <Grid alignContent={"flex-end"} justify={"flex-end"} alignItems={"flex-end"} item container xs={4}>

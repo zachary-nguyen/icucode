@@ -4,7 +4,7 @@ import Routes from "./routes/Routes";
 import {createMuiTheme, MuiThemeProvider} from "@material-ui/core";
 import ProfileDrawer from "./components/profile/ProfileDrawer";
 import axios, {AxiosResponse} from "axios";
-import {getAuthHeaders, isSessionValid} from "./session";
+import {getAuthHeaders, clearSession, isSessionValid} from "./session";
 import clsx from "clsx";
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 import { useLocation } from 'react-router-dom'
@@ -133,12 +133,25 @@ function App() {
     };
 
     useEffect(() => {
+        if(!isSessionValid()){
+          // TODO:
+          // Fix this condition
+          if(window.location.pathname === '/' ||
+            window.location.pathname === '/login' ||
+            window.location.pathname === '/register'){
+              // do nothing here
+          }else{
+            window.location.replace('/');
+          }
+        }
+
         axios.get("/api/users/get", {
             headers: getAuthHeaders()
         }).then((res: AxiosResponse) => {
             setUser(res.data)
         }).catch((err) => {
             console.log(err)
+            clearSession()
         })
     },[location])
 
