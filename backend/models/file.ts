@@ -12,6 +12,10 @@ const fileSchemaDef: SchemaDef<App.File> = {
     meta_data: {
         type: {},
         required: false
+    },
+    output: {
+        type: {},
+        required: false
     }
 };
 

@@ -48,6 +48,7 @@ declare namespace App {
     interface File {
         data: any;
         meta_data: any;
+        output: any;
     }
 
     export type UserDoc = MongooseDocument & User;

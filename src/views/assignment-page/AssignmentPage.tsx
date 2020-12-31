@@ -95,6 +95,7 @@ const AssignmentPage = (props: Props) => {
     });
     const [selectedFile, setSelectedFile] = useState(0);
     const [fileContent, setFileContent] = useState([]);
+    const [fileOutput, setFileOutput] = useState([]);
 
     // Fetch user model and courselist
     useEffect( () =>{
@@ -112,6 +113,7 @@ const AssignmentPage = (props: Props) => {
                 console.log(res.data)
                 setFiles(res.data.submissions[0].files.map((f:any)=> f.meta_data));
                 setFileContent(res.data.submissions[0].files.map((f:any) => Buffer.from(f.data).toString("utf8")));
+                setFileOutput(res.data.submissions[0].files.map((f:any) => Buffer.from(f.output).toString("utf8")));
             }
         }).catch(err => {
             console.log(err)
@@ -252,11 +254,23 @@ const AssignmentPage = (props: Props) => {
                                 mode={"java"}
                                 theme={"github"}
                                 width={"100%"}
-                                height={"100vh"}
+                                height={"50vh"}
                                 readOnly={true}
                                 value={fileContent[selectedFile]}
                             />
                         </Grid>
+                        {fileOutput[selectedFile] &&
+                          <Grid xs={10} item>
+                              <ReactAce
+                                  mode={"java"}
+                                  theme={"github"}
+                                  width={"100%"}
+                                  height={"50vh"}
+                                  readOnly={true}
+                                  value={fileOutput[selectedFile]}
+                              />
+                          </Grid>
+                        }
                     </Grid>
                 }
                 <Snackbar open={uploadStatus.status !== null} autoHideDuration={6000} onClose={handleClose}>
