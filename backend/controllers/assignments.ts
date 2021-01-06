@@ -4,6 +4,7 @@ import { Request, Response } from "express";
 import Controller from "../interfaces/controller.interface";
 import Course from "../models/courses";
 import Assignment from "../models/assignments";
+import submission from "../models/submission";
 
 export default class AssignmentController implements Controller {
     public path = "/api/assignments";
@@ -31,23 +32,25 @@ export default class AssignmentController implements Controller {
 
     private getAssignment = async (request: Request, response: Response) => {
         try {
+            // Get assignment for given student
             // @ts-ignore
             let assignment = await Assignment.findOne({_id: request.query.assignmentId})
                 .populate({
                     path: "submissions",
                     model: "Submission",
+                    // @ts-ignore
+                    match: {studentId: request.user._id},
                     populate: {
                         path: "files",
                         model: "File"
                     }
                 })
-
             // Return submission for students
             // @ts-ignore
-            assignment.submissions.filter(submission => submission.studentId !== request.user_id);
-            assignment.submissions[0].files =  assignment.submissions[0].files.map(f => f.data = f.data.buffer); // return buffer
+            assignment.submissions[0].files = assignment.submissions[0].files.map(f => f.data = f.data.buffer); // return buffer
             return response.status(200).json(assignment)
         } catch (error) {
+            console.log(error)
             return response.status(400).json(error);
         }
 

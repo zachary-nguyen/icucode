@@ -1,4 +1,5 @@
 import {MongooseDocument} from "mongoose";
+import {Role} from "../roles";
 
 declare namespace App {
 
@@ -11,6 +12,7 @@ declare namespace App {
         facultyUser: boolean;
         // @ts-ignore
         courses: Course["_id"][];
+        role: Role;
     }
 
     interface Course {

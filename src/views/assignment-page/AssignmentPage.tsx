@@ -198,6 +198,7 @@ const AssignmentPage = (props: Props) => {
       return false;
     }
 
+    // --- This is the student view ----- //
     return (
         <div>
             <Grid container direction={"column"}>
@@ -287,6 +288,10 @@ const AssignmentPage = (props: Props) => {
             </Grid>
         </div>
     )
+
+    // --- Professor View --- //
+
+
 };
 
 export default AssignmentPage;
