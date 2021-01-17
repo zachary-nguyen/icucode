@@ -136,6 +136,8 @@ function App() {
         if(!isSessionValid()){
           // TODO:
           // Fix this condition
+          console.log("session is not valid");
+          clearSession();
           if(window.location.pathname === '/' ||
             window.location.pathname === '/login' ||
             window.location.pathname === '/register'){
@@ -143,6 +145,7 @@ function App() {
           }else{
             window.location.replace('/');
           }
+          return;
         }
 
         axios.get("/api/users/get", {
@@ -151,7 +154,7 @@ function App() {
             setUser(res.data)
         }).catch((err) => {
             console.log(err)
-            clearSession()
+            clearSession();
         })
     },[location])
 

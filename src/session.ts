@@ -20,7 +20,7 @@ export const clearSession = (): void => {
 export const isSessionValid = (): boolean => {
     const expiry = localStorage.getItem(LOCAL_STORAGE.EXPIRY);
     if (expiry) {
-        return +new Date(expiry) > +new Date();
+      return +new Date(expiry) > +new Date();
     }
     return false;
 };
