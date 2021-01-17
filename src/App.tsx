@@ -143,7 +143,7 @@ function App() {
             window.location.pathname === '/register'){
               // do nothing here
           }else{
-            window.location.replace('/');
+            window.location.replace('/login');
           }
           return;
         }

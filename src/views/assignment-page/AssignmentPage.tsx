@@ -96,6 +96,10 @@ const AssignmentPage = (props: Props) => {
     const [selectedFile, setSelectedFile] = useState(0);
     const [fileContent, setFileContent] = useState([]);
     const [fileOutput, setFileOutput] = useState([]);
+    const icuCompiler = axios.create({
+      baseURL: 'https://icucompiler.herokuapp.com',
+      timeout: 10000,
+    });
 
     // Fetch user model and courselist
     useEffect( () =>{
@@ -181,6 +185,22 @@ const AssignmentPage = (props: Props) => {
         }
     }
 
+    const compile = () => {
+      let count = assignment.submissions.length;
+
+      if(count > 0){
+        console.log("sending request for submission to be compiled");
+        let submissionID = assignment.submissions[count-1]._id;
+        console.log("sending compilation request for submission: ", submissionID);
+
+        icuCompiler.get(`/compile/${submissionID}`).then(res => {
+          console.log("compile res", res);
+        });
+      }else{
+        console.log("no submissions to compile");
+      }
+    }
+
     const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
         if (reason === 'clickaway') {
             return;
@@ -227,6 +247,7 @@ const AssignmentPage = (props: Props) => {
                                 <Grid alignContent={"flex-end"} justify={"flex-end"} alignItems={"flex-end"} item container xs={4}>
                                     <Button disabled={files && files.length === 0} className={classes.button} color={"primary"} variant={"contained"} onClick={upload}> Upload </Button>
                                     <Button color={"primary"} variant={"outlined"} onClick={upload}> Remove </Button>
+                                    <Button color={"primary"} variant={"outlined"} onClick={compile}> Compile </Button>
                                 </Grid>
 
                             </Grid>
