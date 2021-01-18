@@ -1,5 +1,5 @@
 import {MongooseDocument} from "mongoose";
-import {Role} from "../roles";
+import {Role} from "roles";
 
 declare namespace App {
 
