@@ -8,6 +8,7 @@
     "build": "tsc index.d.ts"
   },
   "dependencies": {
+    "roles": "file:../roles",
     "@types/mongoose": "5.7.13",
     "typescript": "^3.7.5"
   },
