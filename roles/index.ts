@@ -5,7 +5,7 @@ interface Action {
     modify:boolean;
 }
 
-interface Role {
+export interface Role {
     assigmentCreation: Action;
     grades: Action;
     courseCreation: Action;
