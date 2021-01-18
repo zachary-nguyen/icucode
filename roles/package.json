@@ -1,0 +1,15 @@
+{
+  "name": "app-roles",
+  "version": "1.0.1",
+  "license": "UNLICENSED",
+  "description": "Roles for RBAC",
+  "typeScriptVersion": "3",
+  "scripts": {
+    "build": "tsc index.ts"
+  },
+  "dependencies": {
+    "@types/mongoose": "5.7.13",
+    "typescript": "^3.7.5"
+  },
+  "devDependencies": {}
+}

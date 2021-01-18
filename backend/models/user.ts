@@ -45,6 +45,10 @@ const userSchemaDef: SchemaDef<App.User> = {
         ref: "User",
         required: true,
         default: []
+    },
+    role: {
+        type: {},
+        required: true
     }
 };
 

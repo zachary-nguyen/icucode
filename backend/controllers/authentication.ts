@@ -5,6 +5,7 @@ import * as express from "express";
 import { NextFunction, Request, Response } from "express";
 import User from "../models/user";
 import Controller from "../interfaces/controller.interface";
+import {Student} from "roles";
 
 export default class AuthenticationController implements Controller {
     public path = "/api/auth";
@@ -38,6 +39,7 @@ export default class AuthenticationController implements Controller {
             user.email = request.body.email;
             user.setPassword(request.body.password);
             user.facultyUser = false;
+            user.role = Student;
             await user.save();
             return response.status(200).json("success")
         } catch (error) {
