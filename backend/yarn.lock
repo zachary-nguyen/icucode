@@ -6155,6 +6155,12 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^3.0.0"
     inherits "^2.0.1"
 
+"roles@file:../roles":
+  version "1.0.1"
+  dependencies:
+    "@types/mongoose" "5.7.13"
+    typescript "^3.7.5"
+
 "roles@link:../roles":
   version "0.0.0"
   uid ""

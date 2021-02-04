@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 import Controller from "../interfaces/controller.interface";
 import Course from "../models/courses";
 import Assignment from "../models/assignments";
-import submission from "../models/submission";
+import Submission from "../models/submission";
 
 export default class AssignmentController implements Controller {
     public path = "/api/assignments";
@@ -18,6 +18,7 @@ export default class AssignmentController implements Controller {
     private initializeRoutes() {
         this.router.get(`${this.path}/assignmentlist`,authorize, this.getAssignmentList);
         this.router.get(`${this.path}/get`,authorize, this.getAssignment);
+        this.router.get(`${this.path}/submission`,authorize, this.getSubmission);
         this.router.post(`${this.path}/create`,authorize, this.createAssignment);
     }
 
@@ -53,7 +54,24 @@ export default class AssignmentController implements Controller {
             console.log(error)
             return response.status(400).json(error);
         }
+    };
 
+    private getSubmission = async (request: Request, response: Response) => {
+        try {
+            // Get assignment for given student
+            // @ts-ignore
+            let submission = await Submission.findOne({_id: request.query.submissionId})
+                .populate({
+                    path: "files",
+                    model: "File",
+                    // @ts-ignore
+                })
+            // @ts-ignore
+            submission.files = submission.files.map(f => f.data = f.data.buffer);
+            return response.status(200).json(submission)
+        } catch (error) {
+            return response.status(400).json(error);
+        }
     };
 
     private createAssignment = async (request: Request, response: Response) => {
@@ -66,12 +84,12 @@ export default class AssignmentController implements Controller {
             assignment.assignmentName = request.body.assignmentName;
 
             // @ts-ignore
-          
-            assignment.courseId = course._id;             
+
+            assignment.courseId = course._id;
 
             //add new assignment to course
             course.courseAssignments.push(assignment);
-            
+
             await assignment.save().catch(err=>console.log(err))
             await course.save().catch(err=>console.log(err))
             return response.status(200).json(assignment);

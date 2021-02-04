@@ -10,6 +10,8 @@ import {isSessionValid} from "../session";
 import CoursePage from "../views/course-page/CoursePage";
 import CreateAssignment from "../views/create-assignment/CreateAssignment";
 import AssignmentPage from "../views/assignment-page/AssignmentPage";
+import SubmisionsPage from "../views/assignment-page/SubmissionsPage";
+import SubmisionPage from "../views/assignment-page/SubmissionPage";
 
 const Routes = () => {
   if(isSessionValid()) {
@@ -25,6 +27,8 @@ const Routes = () => {
             <Route path={"/course/view/:courseCode"} exact component={CoursePage}/>
             <Route path={"/assignment/new/:courseCode"} exact component={CreateAssignment}/>
             <Route path={"/assignment/view/:courseCode/:assignmentId"} exact component={AssignmentPage}/>
+            <Route path={"/submissions/view/:courseCode/:assignmentId"} exact component={SubmisionsPage}/>
+            <Route path={"/submission/view/:submissionId"} exact component={SubmisionPage}/>
             <Route error component={Profile}/>
           </Switch>
     );
