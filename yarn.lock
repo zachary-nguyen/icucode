@@ -2346,6 +2346,7 @@ anymatch@~3.1.1:
   version "1.0.1"
   dependencies:
     "@types/mongoose" "5.7.13"
+    roles "file:../Library/Caches/Yarn/v6/npm-app-shared-codesets-1.0.1-bdba29eb-e86d-4dac-bab0-3ee9b51f1368-1612398297958/node_modules/roles"
     typescript "^3.7.5"
 
 aproba@^1.0.3, aproba@^1.1.1:
@@ -10408,7 +10409,7 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^3.0.0"
     inherits "^2.0.1"
 
-"roles@file:./roles":
+"roles@file:./roles", "roles@file:roles":
   version "1.0.1"
   dependencies:
     "@types/mongoose" "5.7.13"
