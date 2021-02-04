@@ -7,7 +7,6 @@ import axios from "axios";
 import {Button, ListItem, ListItemText} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import {App} from "../../../codesets";
-import {UserContext} from "../../App";
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useHistory } from 'react-router-dom'
 
