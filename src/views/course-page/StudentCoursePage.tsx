@@ -1,41 +1,13 @@
 import React, {useEffect, useState} from "react";
-import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 import {Grid, IconButton, Typography} from "@material-ui/core";
 import {getAuthHeaders} from "../../session";
 import {AxiosResponse} from "axios";
 import axios from "axios";
-import {Button, ListItem, ListItemText} from "@material-ui/core";
+import {ListItem, ListItemText} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import {App} from "../../../codesets";
-import {UserContext} from "../../App";
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useHistory } from 'react-router-dom'
-
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            display: 'flex',
-        },
-        menuButton: {
-            marginRight: theme.spacing(2),
-        },
-        hide: {
-            display: 'none',
-        },
-        drawerHeader: {
-            display: 'flex',
-            alignItems: 'center',
-            padding: theme.spacing(0, 1),
-            // necessary for content to be below app bar
-            ...theme.mixins.toolbar,
-            justifyContent: 'flex-end',
-        },
-        container: {
-            marginTop: "3%"
-        },
-    }),
-);
 
 interface Props {
     match: any;
@@ -43,11 +15,8 @@ interface Props {
 }
 
 const StudentCoursePage = (props: Props) => {
-
-    const classes = useStyles();
     const history = useHistory();
     const [course, setCourse] = useState<any>({});
-    const context = React.useContext(UserContext);
 
     // Fetch user model and courselist
     useEffect(() =>{

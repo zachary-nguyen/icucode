@@ -47,7 +47,6 @@ const ProfessorCoursePage = (props: Props) => {
     const classes = useStyles();
     const history = useHistory();
     const [course, setCourse] = useState<any>({});
-    const context = React.useContext(UserContext);
 
     // Fetch user model and courselist
     useEffect(() =>{
