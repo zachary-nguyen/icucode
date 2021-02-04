@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Grid, Snackbar, Typography} from "@material-ui/core";
+import {Button, Grid, Typography} from "@material-ui/core";
 import {getAuthHeaders} from "../../session";
 import {AxiosResponse} from "axios";
 import axios from "axios";
@@ -7,7 +7,6 @@ import ReactAce from "react-ace";
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/theme-github";
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -82,17 +81,10 @@ interface Props {
     match: any;
 }
 
-function Alert(props: AlertProps) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
-
-const AssignmentPage = (props: Props) => {
+const SubmissionPage = (props: Props) => {
     const classes = useStyles();
-    const [assignment, setAssignment] = useState<any>({});
+    const [submission, setSubmission] = useState<any>({});
     const [files,setFiles] = useState([]);
-    const [uploadStatus, setUploadStatus] = useState({
-        status: null
-    });
     const [selectedFile, setSelectedFile] = useState(0);
     const [fileContent, setFileContent] = useState([]);
     const [fileOutput, setFileOutput] = useState([]);
@@ -104,150 +96,61 @@ const AssignmentPage = (props: Props) => {
     // Fetch user model and courselist
     useEffect( () =>{
         // fetch courses
-        axios.get("/api/assignments/get", {
+        axios.get("/api/assignments/submission", {
             params: {
-                assignmentId: props.match.params.assignmentId
+                submissionId: props.match.params.submissionId
             },
             headers: getAuthHeaders()
         }).then(async (res: AxiosResponse) => {
-            setAssignment(res.data);
+            setSubmission(res.data);
 
-            if(res.data.submissions[0].files.length > 0){
+            console.log('data', res.data);
+            if(res.data.files.length > 0){
                 // populate states
                 console.log(res.data)
-                setFiles(res.data.submissions[0].files.map((f:any)=> f.meta_data));
-                setFileContent(res.data.submissions[0].files.map((f:any) => Buffer.from(f.data).toString("utf8")));
-                setFileOutput(res.data.submissions[0].files.map((f:any) => Buffer.from(f.output).toString("utf8")));
+                setFiles(res.data.files.map((f:any)=> f.meta_data));
+                setFileContent(res.data.files.map((f:any) => Buffer.from(f.data).toString("utf8")));
+                setFileOutput(res.data.files.map((f:any) => Buffer.from(f.output).toString("utf8")));
             }
         }).catch(err => {
             console.log(err)
         })
 
 
-    },[props.match.params.assignmentId])
-
-    /**
-     * When input field is populated
-     * @param e
-     */
-    const onFileChange = async (e: any) => {
-        setFiles(e.target.files)
-
-        const results = await Promise.all(Array.from(e.target.files).map(async (file: any) => {
-            const fileContents = await handleFileChosen(file);
-            return fileContents;
-        }));
-        setFileContent(results);
-    }
-
-    const handleFileChosen = async (file: any) => {
-        return new Promise((resolve, reject) => {
-            let fileReader = new FileReader();
-            fileReader.onload = () => {
-                resolve(fileReader.result);
-            };
-            fileReader.onerror = reject;
-            fileReader.readAsText(file);
-        });
-    }
-
-    const upload = () => {
-        const formData = new FormData();
-
-        Array.from(files).forEach( (file,index) => {
-            formData.append(`sourceFile`, file);
-        })
-
-        formData.append("assignmentId", props.match.params.assignmentId)
-        // Determine multi file or single
-        if(files.length > 1) {
-            axios.post("/api/upload/multi", formData, {headers: getAuthHeaders()})
-                .then((res) => {
-                    if(res.status === 200) {
-                        if(res.status === 200) {
-                            setUploadStatus({status: true})
-                            setAssignment(res.data)
-                        }
-                    }
-                })
-                .catch(err=> setUploadStatus({status: false}))
-        } else if(files.length === 1) {
-            axios.post("/api/upload/single", formData, {headers: getAuthHeaders()})
-                .then((res) => {
-                    if(res.status === 200) {
-                        setUploadStatus({status: true})
-                        setAssignment(res.data)
-                    }
-                })
-                .catch(err=> setUploadStatus({status: false}))
-        } else {
-            return;
-        }
-    }
+    },[props.match.params.submissionId])
 
     const compile = () => {
-      let count = assignment.submissions.length;
+        if (submission.files.length > 0) {
+          console.log("sending request for submission to be compiled");
+          let submissionID = submission._id;
+          console.log("sending compilation request for submission: ", submissionID);
 
-      if(count > 0){
-        console.log("sending request for submission to be compiled");
-        let submissionID = assignment.submissions[count-1]._id;
-        console.log("sending compilation request for submission: ", submissionID);
-
-        icuCompiler.get(`/compile/${submissionID}`).then(res => {
-          console.log("compile res", res);
-        });
-      }else{
-        console.log("no submissions to compile");
-      }
+          icuCompiler.get(`/compile/${submissionID}`).then(res => {
+            console.log("compile res", res);
+          });
+        }
     }
 
-    const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setUploadStatus({status: null});
-    };
-
-    const assignmentIsCompiled = (assignment: any) =>{
-      if(assignment.submissions && assignment.submissions.length > 0){
-        if(assignment.submissions[0].compiled){
-          return true;
-        }
-      }
-      return false;
-    }
-
-    // --- This is the student view ----- //
+    // --- This is the submisson view ----- //
     return (
         <div>
             <Grid container direction={"column"}>
                 <Grid justify={"flex-start"} container direction={"column"} item xs={12}>
                     <Typography variant={"h4"}>
-                        {assignment != null && <strong> {assignment.assignmentName} </strong>}
+                        <strong> Viewing submission for student: {submission.studentId} </strong>
                     </Typography>
                 </Grid>
                 <Grid container direction={"column"}>
                         <Grid container direction={"row"}>
-                            <Grid container item direction={"column"} xs={12}>
-                                <form encType={"multipart/form-data"}  method="post" className={classes.dropZone}>
-                                    <input className={classes.input} id="files" type={"file"} multiple={true} accept={".java"} onChange={onFileChange} name={"sourceFile"}/>
-                                    <label htmlFor={"files"} >
-                                        <Typography color={"primary"} align={"center"}><strong>Upload your file(s)</strong></Typography>
-                                    </label>
-                                </form>
-                            </Grid>
                             <Grid className={classes.actionContainer} justify="center" direction={"row"} item container xs={12}>
                                 <Grid item xs={2}>
-                                    Grade: {assignment.length === 0 ? assignment.grade : "Not Graded"}
+                                    Grade: {submission && submission.grade? submission.grade : "Not Graded"}
                                 </Grid>
                                 <Grid item xs={2}>
-                                    Compiled: { assignmentIsCompiled(assignment) ? "Finished compiling" : "Not Compiled" }
+                                    Compiled: { (fileOutput && fileOutput.length > 0) ? "Finished compiling" : "Not Compiled" }
                                 </Grid>
                                 <div className={classes.flexGrow}/>
                                 <Grid alignContent={"flex-end"} justify={"flex-end"} alignItems={"flex-end"} item container xs={4}>
-                                    <Button disabled={files && files.length === 0} className={classes.button} color={"primary"} variant={"contained"} onClick={upload}> Upload </Button>
-                                    <Button color={"primary"} variant={"outlined"} onClick={upload}> Remove </Button>
                                     <Button color={"primary"} variant={"outlined"} onClick={compile}> Compile </Button>
                                 </Grid>
 
@@ -301,24 +204,9 @@ const AssignmentPage = (props: Props) => {
                         </Grid>
                     </Grid>
                 }
-                <Snackbar open={uploadStatus.status !== null} autoHideDuration={6000} onClose={handleClose}>
-                    {uploadStatus.status === true ?
-                        <Alert onClose={handleClose} severity="success">
-                            Your Assignment has been uploaded!
-                        </Alert>
-                        :
-                        <Alert onClose={handleClose} severity="error">
-                            There was an error uploading your assignment!
-                        </Alert>
-                    }
-                </Snackbar>
             </Grid>
         </div>
     )
-
-    // --- Professor View --- //
-
-
 };
 
-export default AssignmentPage;
+export default SubmissionPage;
