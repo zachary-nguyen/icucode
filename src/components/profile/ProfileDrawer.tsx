@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme: Theme) =>
             width: drawerWidth,
         },
         drawerHeader: {
-            backgroundColor: theme.palette.secondary.main,
+            backgroundColor: "#000000",
             display: 'flex',
             alignItems: 'center',
             padding: theme.spacing(0, 1),
@@ -147,6 +147,7 @@ const ProfileDrawer = (props: Props) => {
                 }}
             >
                 <div className={classes.drawerHeader}>
+                    <img height={50} alt="logo" src={require("../../assets/carleton-logo.gif")}/>
                     <IconButton onClick={props.handleClose}>
                         {theme.direction === 'ltr' ? <ChevronLeftIcon color={"action"}/> : <ChevronRightIcon />}
                     </IconButton>
