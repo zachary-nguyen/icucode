@@ -46,6 +46,8 @@ export default class AssignmentController implements Controller {
                         model: "File"
                     }
                 })
+
+            console.log(assignment);
             // Return submission for students
             // @ts-ignore
             assignment.submissions[0].files = assignment.submissions[0].files.map(f => f.data = f.data.buffer); // return buffer
