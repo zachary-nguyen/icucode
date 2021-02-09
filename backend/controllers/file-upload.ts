@@ -52,7 +52,7 @@ export default class FileUploadController implements Controller {
 
             //-------- Verify if student has made a submission --------
             //@ts-ignore
-            let submission = assignment.submissions.filter(s => s.studentId !== request.user._id)[0];
+            let submission = assignment.submissions.filter(s => s.studentId === request.user._id)[0];
             if(!submission) {
                 submission = new Submission();
                 //@ts-ignore
@@ -95,11 +95,13 @@ export default class FileUploadController implements Controller {
             //-------- Add submission to assignment --------
             if(assignment) {
                 assignment.submissions = submission;
+                await assignment.save();
             }
 
             if(submission) {
                 await submission.save();
             }
+
             const updatedAssignment : any = await Assignment.findOne({_id: request.body.assignmentId})
                 .populate({
                     path: "submissions",
@@ -157,13 +159,12 @@ export default class FileUploadController implements Controller {
                     }
                 })
 
-
             //@ts-ignore
-            let submission = assignment.submissions.filter(submission => submission.studentId !== request.user_id)[0];
+            let submission = assignment.submissions.filter(submission => submission.studentId === request.user._id)[0];
 
             // If submission exist we edit
             if(submission) {
-                submission.files = [file];
+                submission.files = [file]
             } else {
                 submission = new Submission();
                 // @ts-ignore
@@ -175,8 +176,10 @@ export default class FileUploadController implements Controller {
 
             if(assignment) {
                 let newSubmission = [];
-                if(assignment.submissions.length > 0) {
+                //@ts-ignore
+                if(assignment.submissions.some(submission => submission.studentId === request.user._id) > 0) {
                     newSubmission = assignment.submissions.map((sub) => {
+                        console.log(sub)
                             // If student already submitted we update
                             //@ts-ignore
                             if(sub.studentId === request.user_id) {
@@ -188,7 +191,6 @@ export default class FileUploadController implements Controller {
                 } else {
                     assignment.submissions.push(submission)
                 }
-
             }
 
             await submission.save();

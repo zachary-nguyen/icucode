@@ -5,6 +5,7 @@ import Controller from "../interfaces/controller.interface";
 import Course from "../models/courses";
 import Assignment from "../models/assignments";
 import Submission from "../models/submission";
+import User from "../models/user";
 
 export default class AssignmentController implements Controller {
     public path = "/api/assignments";
@@ -33,6 +34,9 @@ export default class AssignmentController implements Controller {
 
     private getAssignment = async (request: Request, response: Response) => {
         try {
+            // @ts-ignore
+            const user = await User.findById(request.user._id);
+
             // Get assignment for given student
             // @ts-ignore
             let assignment = await Assignment.findOne({_id: request.query.assignmentId})
@@ -40,14 +44,13 @@ export default class AssignmentController implements Controller {
                     path: "submissions",
                     model: "Submission",
                     // @ts-ignore
-                    match: {studentId: request.user._id},
+                    match: user.facultyUser ? undefined :{studentId: request.user._id},
                     populate: {
                         path: "files",
                         model: "File"
                     }
                 })
 
-            console.log(assignment);
             // Return submission for students
             // @ts-ignore
             assignment.submissions[0].files = assignment.submissions[0].files.map(f => f.data = f.data.buffer); // return buffer
