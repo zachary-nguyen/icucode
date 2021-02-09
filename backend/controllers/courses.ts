@@ -17,6 +17,7 @@ export default class CourseController implements Controller {
     private initializeRoutes() {
         this.router.get(`${this.path}/get`,authorize, this.getCourse);
         this.router.get(`${this.path}/courselist`,authorize, this.getCourseList);
+        this.router.get(`${this.path}/search`,authorize, this.searchCourseList)
         this.router.post(`${this.path}/create`,authorize, this.createCourse);
         this.router.post(`${this.path}/register`,authorize, this.registerToCourse);
         this.router.delete(`${this.path}/delete`,authorize, this.deleteCourse);
@@ -39,7 +40,27 @@ export default class CourseController implements Controller {
 
     private getCourseList = async (request: Request, response: Response) => {
         try {
-            const courseList = await Course.find();
+            // @ts-ignore
+            const user = await User.findById(request.user._id);
+            let courseList = await Course.find();
+            courseList = courseList.filter(course => !user.courses.includes(course._id));
+
+            return response.status(200).json(courseList)
+        } catch (error) {
+            return response.status(400).json(error);
+        }
+    };
+
+    private searchCourseList = async (request: Request, response: Response) => {
+        try {
+            // @ts-ignore
+            const user = await User.findById(request.user._id);
+            let courseList = await Course.find({$or:
+                    [{courseCode: {$regex: new RegExp("^" + request.query.courseCode, "i")}},
+                        {courseName: {$regex: new RegExp("^" + request.query.courseCode, "i")}}
+                ]});
+
+            courseList = courseList.filter(course => !user.courses.includes(course._id));
             return response.status(200).json(courseList)
         } catch (error) {
             return response.status(400).json(error);
