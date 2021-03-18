@@ -15,7 +15,7 @@ interface Props {
 const SubmissionsPage = (props: Props) => {
     const [assignment, setAssignment] = useState<any>({});
     const [submissions, setSubmissions] = useState<any>({});
-
+    console.log(submissions)
     useEffect( () =>{
         // fetch course & submissions
         axios.get("/api/assignments/get", {
@@ -47,7 +47,7 @@ const SubmissionsPage = (props: Props) => {
                             return (
                               // @ts-ignore
                               <ListItem component={Link} button to={`/submission/view/${submission._id}`} key={submission._id}>
-                                <ListItemText primary={"student id: " + submission.studentId + " compiled: " + (submission.files[0].output ? "Finished compiling" : "Queued for compilation")} />
+                                <ListItemText primary={"Student: " + submission.studentId.firstName + " " + submission.studentId.lastName + " Status: " + (submission.files[0].output ? "Finished compiling" : "Queued for compilation")} />
                               </ListItem>
                             )
                         })}

@@ -3,6 +3,7 @@ import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 import {Button, Grid, TextField, Typography} from "@material-ui/core";
 import {getAuthHeaders} from "../../session";
 import axios from "axios";
+import {useHistory} from "react-router-dom";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -29,6 +30,7 @@ interface Props {
 const CreateAssignment = (props: Props) => {
 
     const classes = useStyles();
+    const history = useHistory();
 
     const [newAssignment, setNewAssignment] = useState<any>({
         assignmentName: "",
@@ -60,7 +62,7 @@ const CreateAssignment = (props: Props) => {
             grade: newAssignment.grade,
             courseId: newAssignment.courseId
         }, {headers: getAuthHeaders()})
-            .then(() => {console.log("created")})
+            .then(() => {history.push("/profile")})
             .catch((err) => {console.log(err)})
     }
 
@@ -95,9 +97,11 @@ const CreateAssignment = (props: Props) => {
                         />
                     </Grid>
                 </Grid>
-                <Grid className={classes.container} container item>
+                <Grid className={classes.container} container item spacing={2}>
                     <Grid item>
                         <Button onClick={createAssignment} color={"primary"} variant={"contained"}> Create Assignment </Button>
+                    </Grid>
+                    <Grid item>
                         <Button href="/profile" color={"primary"} variant={"contained"}> Back To Profile </Button>
                     </Grid>
                 </Grid>

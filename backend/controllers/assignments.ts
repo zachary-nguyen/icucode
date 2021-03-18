@@ -45,10 +45,11 @@ export default class AssignmentController implements Controller {
                     model: "Submission",
                     // @ts-ignore
                     match: user.facultyUser ? undefined :{studentId: request.user._id},
-                    populate: {
+                    populate: [{
                         path: "files",
-                        model: "File"
-                    }
+                        model: "File",
+                    },{path: "studentId",
+                        model: "User"}]
                 })
 
             // Return submission for students
@@ -66,11 +67,13 @@ export default class AssignmentController implements Controller {
             // Get assignment for given student
             // @ts-ignore
             let submission = await Submission.findOne({_id: request.query.submissionId})
-                .populate({
+                .populate([{
                     path: "files",
-                    model: "File",
-                    // @ts-ignore
-                })
+                    model: "File"},
+                    {path:"studentId",
+                    model: "User"}]
+                )
+            console.log(submission)
             // @ts-ignore
             submission.files = submission.files.map(f => f.data = f.data.buffer);
             return response.status(200).json(submission)

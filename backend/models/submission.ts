@@ -13,6 +13,7 @@ const submissionSchemaDef: SchemaDef<App.Submission> = {
     },
     grade: {
         type: String,
+        default: "Not Graded",
         required: false
     },
     submitted:{
