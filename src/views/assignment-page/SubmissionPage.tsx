@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Grid, Typography} from "@material-ui/core";
+import {Button, Grid, TextField, Typography} from "@material-ui/core";
 import {getAuthHeaders} from "../../session";
 import {AxiosResponse} from "axios";
 import axios from "axios";
@@ -88,6 +88,9 @@ const SubmissionPage = (props: Props) => {
     const [selectedFile, setSelectedFile] = useState(0);
     const [fileContent, setFileContent] = useState([]);
     const [fileOutput, setFileOutput] = useState([]);
+    const [grade, setGrade] = useState("");
+    const [edit, setEdit] = useState(true);
+
     const icuCompiler = axios.create({
       baseURL: 'https://icucompiler.herokuapp.com',
       timeout: 10000,
@@ -103,7 +106,7 @@ const SubmissionPage = (props: Props) => {
             headers: getAuthHeaders()
         }).then(async (res: AxiosResponse) => {
             setSubmission(res.data);
-
+            setGrade(res.data.grade)
             console.log('data', res.data);
             if(res.data.files.length > 0){
                 // populate states
@@ -131,25 +134,33 @@ const SubmissionPage = (props: Props) => {
         }
     }
 
+    const onChange = (e: any)=> {
+        setGrade(e.target.value)
+    };
+
     // --- This is the submisson view ----- //
     return (
         <div>
             <Grid container direction={"column"}>
                 <Grid justify={"flex-start"} container direction={"column"} item xs={12}>
                     <Typography variant={"h4"}>
-                        <strong> Viewing submission for student: {submission.studentId} </strong>
+                        <strong> Viewing submission for student: {submission.studentId && submission.studentId.firstName + " " + submission.studentId.lastName} </strong>
                     </Typography>
                 </Grid>
                 <Grid container direction={"column"}>
                         <Grid container direction={"row"}>
-                            <Grid className={classes.actionContainer} justify="center" direction={"row"} item container xs={12}>
+                            <Grid className={classes.actionContainer} justify="center" direction={"row"} item alignItems={"center"} container xs={12}>
                                 <Grid item xs={2}>
-                                    Grade: {submission && submission.grade? submission.grade : "Not Graded"}
+                                    <TextField fullWidth variant={"outlined"} onChange={onChange} disabled={edit} label={"Grade"} value={grade}/>
+                                    <Button fullWidth onClick={() => setEdit(!edit)} color={"primary"} variant={"outlined"}>Edit</Button>
                                 </Grid>
                                 <Grid item xs={2}>
                                     Compiled: { (fileOutput && fileOutput.length > 0) ? "Finished compiling" : "Not Compiled" }
                                 </Grid>
-                                <div className={classes.flexGrow}/>
+                                {/*<div className={classes.flexGrow}/>*/}
+                                <Grid item xs={4}>
+                                    <TextField variant={"outlined"} fullWidth label={"Feedback"}/>
+                                </Grid>
                                 <Grid alignContent={"flex-end"} justify={"flex-end"} alignItems={"flex-end"} item container xs={4}>
                                     <Button color={"primary"} variant={"outlined"} onClick={compile}> Compile </Button>
                                 </Grid>
